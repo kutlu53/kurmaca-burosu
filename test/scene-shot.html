@@ -1,0 +1,80 @@
+<!doctype html><meta charset="utf-8"><title>sahne görüntüsü</title>
+<!-- Olay yeri ekran görüntüsü için sarmalayıcı. Hash ile durum seçilir:
+       #dosya | #dosya=open   giriş: kapalı / açılmış dosya (raf: birden çok vaka)
+       &vaka=vaka-02     o vakayı açar (öbür seçeneklerle birlikte)
+       #scene=0|1|2      o sahneyi açar, ilk iki nesneye dokunur
+       #book             kitap görünümünü açar
+       #sorgu=kenan      sorgu ekranında o tanığı seçer, ilk iki soruyu sorar
+       #w=400            iframe genişliği (varsayılan 1000)
+     Çalıştır: chrome - -headless=new - -allow-file-access-from-files - -window-size=1040,900 - -screenshot=out.png "file:///C:/Edebiyat-Kurmaca/test/scene-shot.html#scene=1"
+     Başta localStorage temizlenir. -->
+<style>body{margin:0;background:#141922}iframe{border:0;display:block}</style>
+<script>
+  const q = Object.fromEntries(location.hash.slice(1).split("&").filter(Boolean).map((p) => p.split("=")));
+  try { localStorage.removeItem("kurmaca-burosu-v2-vaka-01"); localStorage.removeItem("kurmaca-burosu-v2-vaka-02"); localStorage.removeItem("kurmaca-burosu-vaka"); } catch (e) {}
+  const f = document.createElement("iframe");
+  f.width = q.w || 1000; f.height = 900; f.src = "file:///C:/Edebiyat-Kurmaca/index.html" + (q.vaka ? "#" + q.vaka : "");
+  f.onload = () => {
+    const d = f.contentDocument;
+    if ("dosya" in q) { if (q.dosya === "open") d.querySelector("[data-act=fileOpen]").click(); return; }
+    const fo = d.querySelector("[data-act=fileOpen]"); if (fo) fo.click();
+    d.querySelector('[data-act=go][data-v=olay]').click();
+    if ("scene" in q) {
+      d.querySelector(`[data-act=sceneTo][data-i="${q.scene}"]`).click();
+      const hots = d.querySelectorAll(".hot");
+      if (hots[0]) hots[0].click();
+      if (hots[1]) hots[1].click();
+    }
+    if ("sorgu" in q) {
+      d.querySelector('[data-act=go][data-v=sorgu]').click();
+      d.querySelector(`[data-act=sus][data-id="${q.sorgu || "usta"}"]`).click();
+      d.querySelector('[data-act=ask][data-i="0"]').click();
+      d.querySelector('[data-act=ask][data-i="1"]').click();
+    }
+    if ("konum" in q) {
+      const L = f.contentWindow.KB.CASE.location;
+      d.querySelector("[data-act=book]").click();
+      for (const id of L.need) d.querySelector(`.c[data-c="${id}"]`).click();
+      d.querySelector("[data-act=bookClose]").click();
+      d.querySelector('[data-act=go][data-v=konum]').click();
+      d.querySelector(`[data-act=land][data-id=${L.answer}]`).click();
+      d.querySelector(`.evc[data-ev=${L.need[0]}]`).click(); d.querySelector(`.evc[data-ev=${L.need[1]}]`).click();
+      if (q.konum === "done") d.querySelector("[data-act=locCheck]").click();
+    }
+    if ("pano" in q) {
+      d.querySelector("[data-act=book]").click();
+      d.querySelectorAll(".c").forEach(() => { const c = d.querySelector(".c:not(.found)"); if (c) c.click(); });
+      d.querySelector("[data-act=bookClose]").click();
+      d.querySelector('[data-act=go][data-v=pano]').click();
+      const w = f.contentWindow, tap = (id) => { const c = d.querySelector(`.card[data-card="${id}"]`); try { c.dispatchEvent(new w.PointerEvent("pointerdown", { bubbles: true, clientX: 10, clientY: 10, pointerId: 1 })); } catch (e) {} c.dispatchEvent(new w.PointerEvent("pointerup", { bubbles: true, clientX: 10, clientY: 10, pointerId: 1 })); };
+      const link = (a, b, t) => { tap(a); tap(b); d.querySelector(`[data-act=ctype][data-t=${t}]`).click(); };
+      /* yalnızca metin ipuçları (kitaptan toplananlar); sorgu ipuçları burada yok */
+      link("saatler", "umutsaat", "leitmotif"); link("tekne", "durdum", "mekan"); link("eller", "marti", "kanit"); link("merkez", "kart", "metafor"); link("anahtar", "otobus", "zaman"); link("yastik", "kart", "diyalog"); link("fis", "dogumgunu", "zaman");
+      if (q.pano === "pick") { tap("yastik"); tap("durdum"); }
+      if (q.pano === "sel") tap("hapsetti");
+      if (q.pano === "more") { d.querySelector("[data-act=connMore]").click(); d.querySelector(".conns-head").scrollIntoView(); }
+    }
+    if ("sucla" in q) {
+      d.querySelector("[data-act=book]").click();
+      d.querySelectorAll(".c").forEach(() => { const c = d.querySelector(".c:not(.found)"); if (c) c.click(); });
+      d.querySelector("[data-act=bookClose]").click();
+      d.querySelector('[data-act=go][data-v=sucla]').click();
+      const F = f.contentWindow.KB.CASE.final, S0 = f.contentWindow.KB.state();
+      d.querySelector(`[data-act=finWho][data-id=${F.who.answer}]`).click();
+      F.evidence.filter((e) => S0.found[e]).slice(0, 2).forEach((e) => d.querySelector(`.evc[data-ev=${e}]`).click());
+      d.querySelector(`[data-act=finWhy][data-id=${F.why.answer}]`).click();
+      d.querySelector(`[data-act=finCenter][data-id=${F.center.options.find((o) => o.grade === "ustaca").id}]`).click();
+      if (q.sucla === "alt") d.querySelector(".sec:nth-of-type(3)").scrollIntoView();
+      if (q.sucla === "sonuc" || q.sucla === "sonuc-alt") {
+        const t = d.querySelector("#report"); t.value = "Bu öyküde asıl çözülen şey yasın durdurduğu zamanın sevgiyle yeniden işlemeye başlamasıdır."; t.dispatchEvent(new f.contentWindow.Event("input", { bubbles: true }));
+        d.querySelector("[data-act=accuse]").click();
+        if (q.sucla === "sonuc-alt") d.querySelector(".result").scrollIntoView();
+      }
+    }
+    if ("book" in q) {
+      d.querySelector("[data-act=book]").click();
+      const c = d.querySelectorAll(".c"); if (c[0]) c[0].click(); if (c[3]) c[3].click();
+    }
+  };
+  document.body ? document.body.appendChild(f) : addEventListener("DOMContentLoaded", () => document.body.appendChild(f));
+</script>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kurmaca Bürosu</title>
+<meta name="description" content="Okur dedektif, ayrıntı ipucu, gizli merkez dava. Polisiye kurgulu bir okuma oyunu.">
+<!-- Yazı tipleri: çevrimiçiyken Google Fonts, çevrimdışıyken assets/fonts/ altındaki @font-face (bkz. assets/fonts/OKUBENI.md) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=Special+Elite&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand" id="brand">Kurmaca Bürosu</div>
+      <h1 class="case-title" id="caseTitle"></h1>
+    </div>
+    <div class="chips" id="chips"></div>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Soruşturma adımları"></nav>
+  <main id="view"></main>
+  <footer>
+    <span>Öykü ve vaka bu oyun için özgün yazılmıştır.</span>
+    <span id="resetZone"></span>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Veri: fetch yok, file:// altında çalışsın diye düz script -->
+<script src="data/case-01.js"></script>
+<script src="data/case-02.js"></script>
+<!-- Modüller (yükleme sırası önemli: main en sonda). icons.js üretilmiş dosyadır: node build.js icons -->
+<script src="js/icons.js"></script>
+<script src="js/clock.js"></script>
+<script src="js/scenes.js"></script>
+<script src="js/board.js"></script>
+<script src="js/score.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

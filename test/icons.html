@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>İkon ve saat galerisi</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0 24px}
+  .gal div{display:grid;justify-items:center;gap:6px;padding:10px 4px;border:1px solid var(--line);border-radius:3px;font-size:11px;color:var(--muted);text-align:center;word-break:break-all}
+  .gal .ic{width:48px;height:48px}
+  .gal.on-paper{background:var(--paper);color:var(--ink)}
+  .gal.on-paper div{border-color:#0002;color:var(--ink-soft)}
+  .clocks{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;margin:10px 0 24px}
+  .clocks figure{margin:0;display:grid;justify-items:center;gap:6px;font-size:12px;color:var(--muted)}
+  .pano-demo{background:var(--paper);padding:14px;border-radius:3px;display:flex;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Kurmaca Bürosu · test</div>
+  <h1 class="case-title">İkonlar ve saatler</h1>
+
+  <div class="label on-desk" style="margin-top:18px">Masada (koyu zemin)</div>
+  <div class="gal" id="galDesk"></div>
+
+  <div class="label on-desk">Kâğıtta (açık zemin)</div>
+  <div class="gal on-paper" id="galPaper"></div>
+
+  <div class="label on-desk">Saat bileşeni · duvar, masa, cep, kol</div>
+  <div class="clocks" id="clocks"></div>
+  <div class="row">
+    <button class="btn" id="btnNow">Gerçek saate dön (animasyon)</button>
+    <button class="btn ghost" id="btn920">9.20'ye geri al</button>
+    <button class="btn ghost" id="btnTick">Tik-tak aç/kapat</button>
+  </div>
+  <p id="autoOut" style="font-size:20px;color:var(--brass);font-family:var(--f-display)"></p>
+</div>
+<script src="../js/icons.js"></script>
+<script src="../js/clock.js"></script>
+<script>
+  const cell = (id) => `<div>${KB.icon(id)}<span>${id}</span></div>`;
+  document.getElementById("galDesk").innerHTML = KB.ICON_IDS.map(cell).join("");
+  document.getElementById("galPaper").innerHTML = KB.ICON_IDS.map(cell).join("");
+  const clocks = [];
+  const box = document.getElementById("clocks");
+  for (const [style, size] of [["duvar", 150], ["masa", 140], ["cep", 130], ["kol", 120]]) {
+    const f = document.createElement("figure");
+    const c = KB.createClock({ style, size });
+    f.appendChild(c); f.insertAdjacentHTML("beforeend", `<figcaption>${style}</figcaption>`);
+    box.appendChild(f); clocks.push(c);
+  }
+  document.getElementById("btnNow").onclick = () => { const d = new Date(); clocks.forEach((c, i) => setTimeout(() => c.setTime(d.getHours(), d.getMinutes(), { animate: true, duration: 1800, turns: 1 }), i * 250)); };
+  document.getElementById("btn920").onclick = () => clocks.forEach((c) => c.setTime(9, 20));
+  let tick = false;
+  document.getElementById("btnTick").onclick = () => { tick = !tick; clocks.forEach((c) => c.setTicking(tick)); };
+  /* #auto: headless denetim için animasyonu ve tik-takı kendiliğinden başlatır, bitince sonucu başlığa yazar */
+  if (location.hash === "#auto") {
+    /* yalnızca test: hareket azaltma tercihini yok say ki animasyon yolu da denetlensin */
+    window.matchMedia = () => ({ matches: false, addEventListener() {} });
+    document.getElementById("btnTick").click();
+    const before = clocks.map((c) => c.getTime());
+    let setEvents = 0;
+    clocks.forEach((c) => c.addEventListener("clockset", () => { setEvents++; }));
+    document.title = "AUTO started";
+    document.getElementById("btnNow").click();
+    const report = () => {
+      const d = new Date(), after = clocks.map((c) => c.getTime());
+      document.title = `AUTO before=${before.map((t) => t.hour + ":" + t.minute).join(",")} after=${after.map((t) => t.hour + ":" + t.minute).join(",")} now=${d.getHours() % 12}:${d.getMinutes()} events=${setEvents} sec=${!!document.querySelector(".clock.ticking .ck-second")}`;
+      /* --screenshot kipinde başlık okunamaz; sonucu sayfaya da yaz */
+      document.getElementById("autoOut").textContent = document.title;
+    };
+    setTimeout(report, 3500);
+  }
+</script>
+</body>
+</html>

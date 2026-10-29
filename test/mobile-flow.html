@@ -1,0 +1,60 @@
+<!doctype html><meta charset="utf-8"><title>bekliyor</title>
+<!-- 400 px iframe içinde tam akış testi. Çalıştır (proje kökünde):
+  chrome --headless=new --allow-file-access-from-files --window-size=600,900 --virtual-time-budget=8000 --dump-dom "file:///C:/Edebiyat-Kurmaca/test/mobile-flow.html" | grep -o "<title>[^<]*"
+  Sonunda localStorage temizlenir. -->
+<!-- #dist eklenirse index.html yerine dist/kurmaca-burosu.html sınanır -->
+<iframe id="f" style="width:400px;height:900px;border:0"></iframe>
+<script>
+const f=document.getElementById("f");let loads=0;const out=[];
+const SRC=location.hash==="#dist"?"file:///C:/Edebiyat-Kurmaca/dist/kurmaca-burosu.html":"file:///C:/Edebiyat-Kurmaca/index.html";
+f.onload=()=>{loads++;const w=f.contentWindow,d=w.document;
+ try{
+  if(loads===1){
+   const measure=n=>out.push(n+":"+d.documentElement.scrollWidth+"/"+w.innerWidth);
+   const go=v=>d.querySelector(`[data-act=go][data-v=${v}]`).click();
+   measure("dosya");
+   d.querySelector("[data-act=fileOpen]").click();measure("dosya-açık");
+   d.querySelector("[data-act=audio]").click();out.push("ses="+w.KB.audio.enabled);
+   go("olay");measure("olay");
+   /* sahne 1'deki nesnelere dokun, büyüteç kullan, kalanını kitaptan topla */
+   d.querySelectorAll(".hot").forEach(h=>h.click());
+   const rozet1=d.querySelectorAll(".hot.found").length;
+   d.querySelector("[data-act=hint]").click();
+   d.querySelector(`[data-act=sceneTo][data-i="1"]`).click();measure("olay-sahne2");
+   d.querySelector("[data-act=book]").click();measure("olay-kitap");
+   d.querySelectorAll(".c").forEach(c=>c.click());
+   out.push("sahne1rozet="+rozet1+" kitapAltı="+d.querySelectorAll(".c.found").length+" tepsi="+d.querySelectorAll(".tray .ev").length+" altyazı="+(d.querySelector("#caption q,#caption i")||{}).textContent);
+   d.querySelector("[data-act=bookClose]").click();
+   go("sorgu");
+   for(const s of["usta","kenan","selma","umut"]){d.querySelector(`[data-act=sus][data-id=${s}]`).click();for(let i=0;i<3;i++)d.querySelector(`[data-act=ask][data-i="${i}"]`).click();}
+   measure("sorgu");
+   go("konum");d.querySelector("[data-act=land][data-id=kiyi]").click();d.querySelector(".evc[data-ev=marti]").click();d.querySelector(".evc[data-ev=koku]").click();d.querySelector(".evc[data-ev=eller]").click();d.querySelector("[data-act=locCheck]").click();measure("konum");
+   out.push("deniz="+!!d.querySelector(".l-sea-g.on")+" cep="+d.querySelectorAll(".pk").length+" cepOk="+d.querySelectorAll(".pk.ok").length);
+   go("pano");measure("pano");
+   const tap=id=>{const c=d.querySelector(`.card[data-card="${id}"]`);try{c.dispatchEvent(new w.PointerEvent("pointerdown",{bubbles:true,clientX:10,clientY:10,pointerId:1}));}catch(e){}c.dispatchEvent(new w.PointerEvent("pointerup",{bubbles:true,clientX:10,clientY:10,pointerId:1}));};
+   tap("saatler");tap("umutsaat");d.querySelector("[data-act=ctype][data-t=leitmotif]").click();
+   tap("kutu");tap("fis");d.querySelector("[data-act=ctype][data-t=zaman]").click();
+   tap("eller");tap("marti");d.querySelector("[data-act=ctype][data-t=kanit]").click();
+   tap("merkez");tap("kart");d.querySelector("[data-act=ctype][data-t=metafor]").click();
+   d.querySelector("[data-act=connMore]").click();
+   out.push("ip="+d.querySelectorAll("#strings path").length+" rozet="+d.querySelectorAll("#strings use").length+" açık="+d.querySelectorAll(".conn.open .long").length+" kısa="+(d.querySelector(".conn .why")||{}).textContent);
+   measure("pano+4bag");
+   go("sucla");measure("sucla");
+   d.querySelector("[data-act=finWho][data-id=kenan]").click();d.querySelector("[data-act=finWhy][data-id=onar]").click();d.querySelector("[data-act=finCenter][data-id=yas]").click();
+   for(const id of["anahtar","otobus","kutu","fis","surcme"])d.querySelector(".evc[data-ev="+id+"]").click();
+   out.push("dosya="+d.querySelectorAll(".folder .pk").length);
+   const t=d.querySelector("#report");t.value="Bu öyküde asıl çözülen şey yasın durdurduğu zamanın sevgiyle yeniden işlemeye başlamasıdır.";t.dispatchEvent(new w.Event("input",{bubbles:true}));
+   d.querySelector("[data-act=accuse]").click();measure("sonuc");
+   const S=w.KB.state(),r=w.KB.score(S,w.KB.CASE);
+   out.push(`found=${Object.keys(S.found).length} hints=${S.hints} conns=${S.conns.map(c=>c.grade).join(",")} finev=${S.fin.ev.length} pts=${r.pts}/${r.max} ${r.rank}`);
+   out.push("stringsPaths="+(d.querySelector("#strings")?d.querySelector("#strings").querySelectorAll("path").length:"-"));
+   f.src=SRC;
+  }else{
+   const S=w.KB.state();out.push(`yeniden: view=${S.view} solved=${S.solved} found=${Object.keys(S.found).length} conns=${S.conns.length}`);
+   w.localStorage.removeItem("kurmaca-burosu-v2-vaka-01");
+   document.title=out.join(" | ");
+  }
+ }catch(e){document.title="HATA "+e.message+" | "+out.join(" | ");}
+};
+f.src=SRC;
+</script>
