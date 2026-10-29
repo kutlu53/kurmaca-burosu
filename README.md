@@ -46,7 +46,7 @@ node test/equiv-v1.js .      # puanlama ve bağ değerlendirmesi v1 ile birebir 
 node test/verify-case.js .   # bütün vakaların bütünlüğü
 ```
 
-`test/mobile-flow.html`, `test/scene-shot.html` ve `test/icons.html` headless Chrome ile görsel/akış denetimi içindir (açıklamalar dosya başlarında).
+`test/playtest.html` oyunu öğrenci gibi uçtan uca oynar (100'den fazla kontrol; `#w=400` ile mobil), `test/mobile-flow.html`, `test/scene-shot.html` ve `test/icons.html` headless Chrome ile görsel/akış denetimi içindir (açıklamalar dosya başlarında).
 
 Proje kararları ve veri şeması: `CLAUDE.md`. Yeni vaka eklemek için `data/case-02.js` örnek alınır; çizimi olmayan sahneler yedek çizimle oynanır.
 

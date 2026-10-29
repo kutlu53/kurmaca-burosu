@@ -1,0 +1,192 @@
+<!doctype html><meta charset="utf-8"><title>bekliyor</title>
+<!-- Uçtan uca oyun testi: öğrenci gibi her ekranı, kenar durumlarını, kaydı, sıfırlamayı ve vaka geçişini dener.
+     Çalıştır (proje kökünde):
+       chrome --headless=new --allow-file-access-from-files --window-size=1100,900 --virtual-time-budget=20000 --dump-dom "file:///C:/Edebiyat-Kurmaca/test/playtest.html" | grep -o "<title>[^<]*"
+       #w=400 ekiyle 400 px genişlikte. Sonuç başlığa ve sayfaya yazılır; sonunda localStorage temizlenir. -->
+<style>body{margin:0;background:#141922;color:#ddd7c9;font:13px/1.4 monospace}iframe{border:0;display:block}pre{white-space:pre-wrap;padding:8px}</style>
+<iframe id="f"></iframe>
+<pre id="out"></pre>
+<script>
+const Q = Object.fromEntries(location.hash.slice(1).split("&").filter(Boolean).map((p) => p.split("=")));
+const W = +Q.w || 1000;
+const BASE = "file:///C:/Edebiyat-Kurmaca/index.html";
+const f = document.getElementById("f"); f.width = W; f.height = 900;
+const R = []; let fails = 0;
+const ok = (name, cond, detail) => { R.push((cond ? "✓ " : "✗ ") + name + (detail !== undefined ? " [" + detail + "]" : "")); if (!cond) fails++; };
+try { ["kurmaca-burosu-v2-vaka-01", "kurmaca-burosu-v2-vaka-02", "kurmaca-burosu-vaka", "kurmaca-burosu-yardim", "kurmaca-burosu-ses"].forEach((k) => localStorage.removeItem(k)); } catch (e) {}
+let phase = 1;
+const partial = () => { document.title = `PLAYTEST (aşama ${phase} bitti, sürüyor) ${fails ? "hata " + fails : ""} / ${R.length} | ` + R.join(" | "); };
+const finish = () => { document.title = `PLAYTEST w=${W} ${fails ? "BAŞARISIZ " + fails : "TAMAM"} / ${R.length} | ` + R.join(" | "); document.getElementById("out").textContent = document.title.split(" | ").join("\n"); try { ["kurmaca-burosu-v2-vaka-01", "kurmaca-burosu-v2-vaka-02", "kurmaca-burosu-vaka", "kurmaca-burosu-yardim", "kurmaca-burosu-ses"].forEach((k) => localStorage.removeItem(k)); } catch (e) {} };
+
+f.onload = async () => {
+  const w = f.contentWindow, d = w.document;
+  const tick = () => new Promise((r) => setTimeout(r, 60));
+  const $ = (s) => d.querySelector(s), $$ = (s) => [...d.querySelectorAll(s)];
+  const click = (s) => { const el = $(s); if (!el) throw new Error("yok: " + s); el.click(); return el; };
+  const toast = () => ($("#toast") || {}).textContent || "";
+  const S = () => w.KB.state();
+  const tap = (id) => { const c = $(`.card[data-card="${id}"]`); if (!c) throw new Error("kart yok " + id); try { c.dispatchEvent(new w.PointerEvent("pointerdown", { bubbles: true, clientX: 10, clientY: 10, pointerId: 1 })); } catch (e) {} c.dispatchEvent(new w.PointerEvent("pointerup", { bubbles: true, clientX: 10, clientY: 10, pointerId: 1 })); };
+  const key = (el, k) => el.dispatchEvent(new w.KeyboardEvent("keydown", { key: k, bubbles: true }));
+  const overflow = () => d.documentElement.scrollWidth <= w.innerWidth;
+  try {
+    if (phase === 1) {
+      /* ---------- Dosya ---------- */
+      ok("raf: iki vaka dosyası", $$(".file.closed").length === 2);
+      ok("etkin dosya Vaka 01", /Dokuzu/.test($(".file.closed:not(.other) .file-title").textContent));
+      ok("taşma yok (dosya)", overflow());
+      ok("yardım çipi var", !!$("[data-act=guide]"));
+      click("[data-act=helpToggle]"); ok("yardım kapatılınca ? gizlenir", !$("[data-act=guide]") && /kapalı/.test(toast()));
+      click("[data-act=helpToggle]"); ok("yardım yeniden açılır", !!$("[data-act=guide]"));
+      click("[data-act=guide]"); ok("rehber: 6 adım + 6 tür", $$(".guide-steps li").length === 6 && $$(".guide .tdefs li").length === 6);
+      key(d, "Escape"); ok("Esc rehberi kapatır", !$("#guideSheet"));
+      click("[data-act=audio]"); ok("ses açılır", w.KB.audio.enabled && /Ses/.test($("[data-act=audio]").textContent));
+      click("[data-act=audio]"); ok("ses kapanır", !w.KB.audio.enabled);
+      /* erken sekmeler: kapılar */
+      click('[data-act=go][data-v=konum]'); ok("konum kapısı (0/2)", /Önce olay yerine dön/.test($("#view").textContent) && /0\/2/.test($("#view").textContent));
+      click('[data-act=go][data-v=pano]'); ok("pano kapısı (0/3)", /En az 3 delil/.test($("#view").textContent));
+      click('[data-act=go][data-v=sucla]'); ok("suçlama erken uyarı", /En az 8 delil/.test($("#view").textContent));
+      click("[data-act=accuse]"); ok("boş suçlama engellenir", /Eksik: suçlu, neden, gizli merkez/.test($("#accuseMsg").textContent));
+      click('[data-act=go][data-v=dosya]');
+      click("[data-act=fileOpen]"); ok("dosya açılır: 2 cümle, 5 adım, düz okur", $$(".brief p").length === 2 && $$(".step").length === 5 && /Öykü bitti/.test($(".bubble.flat").textContent));
+      click('[data-act=go][data-v=olay]'); ok("Soruşturmaya başla → olay", S().view === "olay");
+
+      /* ---------- Olay yeri ---------- */
+      ok("sahne 1 başlığı ve 5 nokta", /Sabah/.test($(".scene-title").textContent) && $$(".hot").length === 5);
+      ok("önceki düğmesi kapalı", $('[data-act=scene][data-d="-1"]').disabled);
+      ok("altyazı boş ipucu", /Nesnelere dokun/.test($("#caption").textContent));
+      click('.hot[data-c="saatler"]');
+      ok("nesneye dokun: bulundu, altyazı, tepsi, sayaç", S().found.saatler && /dokuzu yirmi geçeyi gösterirdi/.test($("#caption").textContent) && $$(".tray .ev").length === 1 && /1\/18/.test($("#chips").textContent));
+      ok("rozet ve aria", $('.hot[data-c="saatler"]').classList.contains("found") && /bulundu/.test($('.hot[data-c="saatler"]').getAttribute("aria-label")));
+      click('.hot[data-c="saatler"]'); ok("aynı nesneye tekrar: sayı değişmez", Object.keys(S().found).length === 1);
+      click('.hot[data-c="durdum"]'); ok("tırnaklı altyazı çift tırnaklanmaz", !/““/.test($("#caption").textContent) && $("#caption i"));
+      click("[data-act=hint]"); ok("büyüteç sayılır ve parlatır", S().hints === 1 && !!$(".hot.flash"));
+      $$(".hot:not(.found)").forEach(() => { const h = $(".hot:not(.found)"); if (h) h.click(); });
+      ok("sahne 1 tamam (5)", Object.keys(S().found).length === 5);
+      click("[data-act=hint]"); ok("büyüteç öbür sahneye geçer", S().scene === 1 && S().hints === 2 && !!$(".hot.flash"));
+      click('[data-act=sceneTo][data-i="2"]'); ok("nokta ile sahne 3", /Akşam/.test($(".scene-title").textContent) && $('[data-act=scene][data-d="1"]').disabled);
+      click('[data-act=scene][data-d="-1"]'); ok("ok ile geri", S().scene === 1);
+      ok("taşma yok (sahne)", overflow());
+      /* kitap */
+      click("[data-act=book]"); ok("kitap açılır, bulunanlar altı çizili", !!$("#sheet") && $$(".book .c.found").length === 5 && $$(".book .c").length === 14);
+      click('.book .c[data-c="marti"]'); ok("metinden ipucu", S().found.marti && $('.book .c[data-c="marti"]').classList.contains("found") && !$('.book .c[data-c="marti"]').hasAttribute("tabindex"));
+      key($('.book .c[data-c="koku"]'), "Enter"); ok("klavye ile metinden ipucu", !!S().found.koku);
+      click("[data-act=hint]"); ok("kitap açıkken büyüteç metinde parlatır", !!$(".book .c.flash") && S().hints === 3);
+      key(d, "Escape"); ok("Esc kitabı kapatır", !$("#sheet") && !d.body.classList.contains("sheet-open"));
+      ok("tepsi kitap sonrası güncel", $$(".tray .ev").length === 7);
+      click("[data-act=book]"); $$(".book .c:not(.found)").forEach(() => { const c = $(".book .c:not(.found)"); if (c) c.click(); }); click("[data-act=bookClose]");
+      ok("14 metin ipucu tamam, büyüteç kapalı", Object.keys(S().found).length === 14 && $("[data-act=hint]").disabled && /Olay Yeri/.test($$(".tab")[1].textContent) && !!$$(".tab")[1].querySelector(".dot"));
+      ok("bildirim: sıra sorguda", /Sıra sorguda/.test(toast()));
+      ok("Sorguya geç düğmesi vurgulu", $(".olay [data-act=go][data-v=sorgu]").classList.contains("solid"));
+
+      /* ---------- Sorgu ---------- */
+      click('.olay [data-act=go][data-v=sorgu]');
+      ok("4 portre, Usta seçili", $$(".portrait").length === 4 && $('.portrait[data-id=usta]').getAttribute("aria-pressed") === "true");
+      click('[data-act=ask][data-i="0"]'); ok("soru → 2 balon, kart kapanır", $$(".bubble").length === 2 && $('[data-act=ask][data-i="0"]').disabled);
+      click('[data-act=ask][data-i="1"]'); ok("delil veren cevap: çip + tepsi", !!$(".bubble.a .clue-chip") && S().found.kurmadi && $$(".tray .ev").length === 15);
+      click('[data-act=sus][data-id=umut]'); ok("anlatıcı etiketi", /Anlatıcıyı sorguluyorsun/.test($(".narrator-tag").textContent));
+      for (const s of ["usta", "kenan", "selma", "umut"]) { click(`[data-act=sus][data-id=${s}]`); for (let i = 0; i < 3; i++) { const b = $(`[data-act=ask][data-i="${i}"]`); if (!b.disabled) b.click(); } }
+      ok("bütün sorular soruldu, 18/18, Sorgu noktası", Object.keys(S().found).length === 18 && $$(".portrait .asked i.on").length === 12 && !!$$(".tab")[2].querySelector(".dot"));
+      ok("taşma yok (sorgu)", overflow());
+      ok("Konuma geç düğmesi vurgulu", $(".sorgu [data-act=go][data-v=konum]").classList.contains("solid"));
+
+      /* ---------- Konum ---------- */
+      click('.sorgu [data-act=go][data-v=konum]');
+      ok("süre sayacı akıyor", /\d\d:\d\d/.test($("#clock").textContent));
+      ok("4 manzara, 18 çip, deniz yok", $$(".land").length === 4 && $$(".evc").length === 18 && !$(".l-sea-g.on"));
+      click('.evc[data-ev=marti]'); ok("manzarasız çip: uyarı", /Önce bir manzara seç/.test(toast()) && S().loc.ev.length === 0);
+      click("[data-act=land][data-id=dag]"); click('.evc[data-ev=marti]'); ok("çip adı bildirimi", /Delil: Martılar/.test(toast())); click('.evc[data-ev=eller]');
+      ok("cep: 2 çip, çipler işaretli", $$(".land[data-id=dag] .pk").length === 2 && $('.evc[data-ev=marti]').getAttribute("aria-pressed") === "true");
+      click('.evc[data-ev=eller]'); ok("çip tekrar: çıkar", S().loc.ev.length === 1);
+      click("[data-act=land][data-id=kiyi]"); ok("manzara değişince cep taşınır", $$(".land[data-id=kiyi] .pk").length === 1 && !$(".land[data-id=dag] .pk"));
+      click("[data-act=land][data-id=dag]"); /* bilerek yanlış */
+      click("[data-act=locCheck]"); ok("yanlış tespit: kırmızı + doğru yeşil + deniz", S().loc.done && $(".land[data-id=dag]").classList.contains("wrong") && $(".land[data-id=kiyi]").classList.contains("right") && !!$(".land[data-id=kiyi] .l-sea-g.on") && /Kıyı kasabası/.test($(".lesson").textContent));
+      click("[data-act=lessonMore]"); ok("Neden? uzun ders", !!$(".lesson-long")); click("[data-act=lessonMore]"); ok("Kapat", !$(".lesson-long"));
+      ok("tespit sonrası kilit", $$(".land:disabled").length === 4);
+
+      /* ---------- Pano ---------- */
+      click('[data-act=go][data-v=pano]');
+      ok("19 kart (18 + merkez), polaroid öğeleri", $$(".card").length === 19 && $$(".card .art .ic").length === 19 && /9\.20/.test($('.card[data-card=saatler] .cap').textContent));
+      tap("saatler"); ok("seçim çubuğu", !!$(".sel-bar") && S().sel === "saatler");
+      click("[data-act=cancel]"); ok("Bırak", !S().sel && !$(".sel-bar"));
+      tap("saatler"); tap("umutsaat"); ok("tür seçici: 6 tür + Türler?", $$(".tbtn").length === 6 && !!$("[data-act=typeHelp]"));
+      click("[data-act=cancel]"); ok("Vazgeç", !S().pending);
+      tap("saatler"); tap("umutsaat"); click("[data-act=ctype][data-t=leitmotif]");
+      ok("ustaca bağ + bildirim rozeti", S().conns[0].grade === "ustaca" && /Ustaca/.test(toast()) && $$(".conn").length === 1);
+      tap("umutsaat"); tap("saatler"); ok("çift bağ engellenir", /zaten bağlı/.test(toast()) && S().conns.length === 1 && !S().pending);
+      tap("kutu"); tap("fis"); click("[data-act=ctype][data-t=zaman]"); ok("yanlış tür: derece düşer + öneri", S().conns[1].grade === "guclu" && /daha uygun/.test(S().conns[1].text));
+      tap("eller"); tap("marti"); click("[data-act=ctype][data-t=kanit]"); ok("yanıltıcı ipucu: zayıf", S().conns[2].grade === "zayif" && /Yanıltıcı/.test(S().conns[2].short));
+      tap("koku"); tap("anahtar"); click("[data-act=ctype][data-t=mekan]"); ok("köprü yok: yetersiz", S().conns[3].grade === "yetersiz");
+      tap("merkez"); ok("merkez seçilince tanım (yardım açık)", /Gizli merkez/.test($(".sel-bar").textContent));
+      tap("kart"); click("[data-act=ctype][data-t=metafor]"); ok("merkeze akan: güçlü", S().conns[4].grade === "guclu" && /Merkeze akıyor/.test(S().conns[4].short));
+      tap("merkez"); tap("anahtar"); click("[data-act=ctype][data-t=kanit]"); ok("merkeze akmayan: zayıf", S().conns[5].grade === "zayif");
+      w.KB.drawStrings(S(), $("#board"), $("#strings")); ok("ipler çizildi (6 ip, 6 tür rozeti, 1 parlama)", $$("#strings path").length === 7 && $$("#strings use").length === 6);
+      click("[data-act=connMore]"); ok("rozet: uzun açıklama", !!$(".conn.open .long")); click("[data-act=connMore]"); ok("kapanır", !$(".conn.open"));
+      click('[data-act=delc][data-k="koku|anahtar"]'); ok("bağ silme", S().conns.length === 5 && !S().conns.some((c) => c.a === "koku"));
+      const card = $('.card[data-card="tekne"]'), p0 = { ...S().pos.tekne }, r = $("#board").getBoundingClientRect();
+      card.dispatchEvent(new w.PointerEvent("pointerdown", { bubbles: true, clientX: r.left + 100, clientY: r.top + 100, pointerId: 2 }));
+      d.dispatchEvent(new w.PointerEvent("pointermove", { bubbles: true, clientX: r.left + 300, clientY: r.top + 300, pointerId: 2 }));
+      d.dispatchEvent(new w.PointerEvent("pointerup", { bubbles: true, clientX: r.left + 300, clientY: r.top + 300, pointerId: 2 }));
+      ok("kart sürükleme: konum değişir, seçim olmaz", (S().pos.tekne.x !== p0.x || S().pos.tekne.y !== p0.y) && !S().sel);
+      const kc = $('.card[data-card="yastik"]'); kc.focus(); key(kc, "Enter"); ok("klavye ile kart seçimi", S().sel === "yastik"); click("[data-act=cancel]");
+      ok("Pano noktası (≥5 bağ)", !!$$(".tab")[4].querySelector(".dot"));
+      ok("taşma yok (pano)", overflow());
+
+      /* ---------- Suçlama ---------- */
+      click('[data-act=go][data-v=sucla]');
+      ok("uyarı yok (18 delil, 5 bağ)", !$(".warn-line"));
+      click("[data-act=finWho][data-id=kimse]"); click("[data-act=finWho][data-id=kenan]"); ok("suçlu seçimi değişir", S().fin.who === "kenan" && $('[data-act=finWho][data-id=kimse]').getAttribute("aria-pressed") === "false");
+      for (const id of ["anahtar", "otobus", "kutu", "fis", "surcme"]) click(`.evc[data-ev=${id}]`);
+      ok("dosya en fazla 4", S().fin.ev.length === 4 && /en fazla 4/.test(toast()) && $$(".folder .pk").length === 4);
+      click('.folder .pk[data-ev=kutu]'); ok("klasördeki çipe dokun: çıkar", S().fin.ev.length === 3);
+      click("[data-act=finWhy][data-id=onar]"); click("[data-act=finCenter][data-id=yas]");
+      const ta = $("#report"); ta.value = "Kısa rapor."; ta.dispatchEvent(new w.Event("input", { bubbles: true }));
+      click("[data-act=accuse]"); ok("kısa raporla kapanır, rapor puanı yok", S().solved && !w.KB.score(S(), w.KB.CASE).rep);
+      const frozen = $("#clock").textContent; await new Promise((r) => setTimeout(r, 1100)); ok("süre dosya kapanınca durur", $("#clock").textContent === frozen, frozen);
+      ok("sonuç: rozet, çubuklar, kararlar", !!$(".rosette") && $$(".meter").length === 4 && $$(".vrow").length === 3 && $$(".vrow .mark.ok").length === 2);
+      ok("epilog 3 satır", $$(".epilog-text p").length === 3); click("[data-act=epilog]"); ok("Epilogu oku: tamamı", $$(".epilog-text p").length === 5); click("[data-act=epilog]");
+      ok("düz okur ve rapor yan yana", /Öykü bitti/.test($(".bubble.cmp").textContent) && /Kısa rapor/.test($(".bubble.cmp.you").textContent));
+      click("[data-act=csv]"); ok("CSV indir bildirimi", /CSV indirildi/.test(toast()));
+      click("[data-act=copy]"); await tick(); /* headless'ta pano izni askıda kalabilir; hata atmaması ve özetin yerinde olması yeter */
+      ok("özet kopyala: hata yok, özet yerinde", !!$("#sumText") && /KURMACA BÜROSU/.test($("#sumText").textContent), /kopyalandı|Metni seçtim|Kopyalanamadı/.test(toast()) ? "bildirim geldi" : "bildirim askıda (headless)");
+      click("[data-act=reopen]"); ok("Yeniden düşün: seçimler korunur", !S().solved && S().fin.who === "kenan" && $("#report").value === "Kısa rapor.");
+      const ta2 = $("#report"); ta2.value = "Bu öyküde asıl çözülen şey yasın durdurduğu zamanın sevgiyle yeniden işlemeye başlamasıdır."; ta2.dispatchEvent(new w.Event("input", { bubbles: true }));
+      click("[data-act=accuse]");
+      const sc = w.KB.score(S(), w.KB.CASE), st = S();
+      const connPts = st.conns.reduce((a, c) => a + ({ ustaca: 3, guclu: 2, zayif: 0, yetersiz: 0 })[c.grade], 0);
+      const exp = 18 + connPts + 0 + 1 + 3 + 3 + 3 + 4 + 2; /* konum yanlış: 0 + marti 1 */
+      ok("puan beklenenle aynı", sc.pts === exp, `${sc.pts}/${sc.max} beklenen ${exp}`);
+      ok("unvan eşiği", sc.rank === (sc.pts / sc.max >= .75 ? "Düşünceli Okur" : sc.pts / sc.max >= .5 ? "Dikkatli Okur" : "Düz Okur"), sc.rank);
+      ok("özet metni tutarlı", new RegExp(`${sc.pts}/${sc.max} puan`).test($("#sumText").textContent) && /Konum: yanlış/.test($("#sumText").textContent));
+      ok("taşma yok (sonuç)", overflow());
+      partial(); phase = 2; f.src = BASE + "?r=2"; return;
+    }
+    if (phase === 2) {
+      ok("yeniden yükleme: çözülmüş durum korunur", S().solved && S().view === "sucla" && Object.keys(S().found).length === 18 && S().conns.length === 5);
+      click("[data-act=askReset]"); ok("sıfırlama onayı sorar", /silinsin mi/.test($("#resetZone").textContent));
+      click("[data-act=noReset]"); ok("vazgeç", !!$("[data-act=askReset]") && S().solved);
+      click("[data-act=askReset]"); click("[data-act=doReset]"); ok("sıfırla: temiz durum", !S().solved && Object.keys(S().found).length === 0 && S().view === "dosya" && /sıfırlandı/.test(toast()));
+      partial(); phase = 3; click('.file.closed.other'); return; /* switchCase sayfayı yeniden yükler */
+    }
+    if (phase === 3) {
+      ok("vaka geçişi: Palto", w.KB.CASE.id === "vaka-02" && /Palto/.test($("#caseTitle").textContent) && /Vaka 02/.test($("#brand").textContent));
+      ok("Vaka 02 kaydı temiz", Object.keys(S().found).length === 0);
+      click("[data-act=fileOpen]"); click('[data-act=go][data-v=olay]');
+      ok("Vaka 02: 4 sahne, Kâtip altyazısı", $$(".dot-btn").length === 4 && $$(".hot").length === 5);
+      click('.hot[data-c="kapot"]'); ok("Vaka 02 ipucu + Kâtip", S().found.kapot && /Kâtip/.test($("#caption .who").textContent));
+      click("[data-act=book]"); ok("Vaka 02 kitap: Kâtibin anlatısı", /Kâtibin anlatısı/.test($("#sheet").getAttribute("aria-label")) && $$(".book .c").length === 14); click("[data-act=bookClose]");
+      click('[data-act=go][data-v=sorgu]'); click('[data-act=sus][data-id=bekci]'); click('[data-act=ask][data-i="0"]'); ok("Vaka 02 sorgu delili", !!S().found.tanidik);
+      click('.file.closed.other, [data-act=go][data-v=dosya]'); /* dosyaya dön */
+      ok("Vaka 02 kaydı ayrı anahtarda", !!w.localStorage.getItem("kurmaca-burosu-v2-vaka-02"));
+      partial(); phase = 4; f.src = BASE + "?r=4#vaka-01&yardim=kapali"; return; /* sorgu dizesi: salt hash değişimi yeniden yüklemez */
+    }
+    if (phase === 4) {
+      ok("adres eki: vaka-01 + yardım kapalı", w.KB.CASE.id === "vaka-01" && !$("[data-act=guide]") && /Yardım kapalı/.test($("#helpZone").textContent));
+      ok("Vaka 01 sıfırlanmış hâliyle açılır", Object.keys(S().found).length === 0);
+      finish(); return;
+    }
+  } catch (e) { ok("HATA " + e.message + " @" + (e.stack || "").split("\n")[1], false); finish(); }
+};
+/* Bekçi: bir aşama takılırsa 20 sn sonra eldeki sonuçları yine yaz */
+setTimeout(() => { if (!/^PLAYTEST w=/.test(document.title) || /sürüyor/.test(document.title)) { ok("BEKÇİ: aşama " + phase + " tamamlanmadı", false); finish(); } }, 20000);
+f.src = BASE;
+</script>

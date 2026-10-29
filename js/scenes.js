@@ -329,6 +329,7 @@ window.KB = window.KB || {};
         <div class="row">
           <button class="btn" data-act="hint" ${left ? "" : "disabled"} title="Bulunmamış bir ayrıntıyı parlatır">${KB.icon("tur-kanit")} Büyüteç</button>
           <button class="btn" data-act="book">${KB.icon("tur-diyalog")} ${esc(CASE.bookLabel || "Umut'un anlatısı")}</button>
+          <button class="btn ${left ? "" : "solid"}" data-act="go" data-v="sorgu">Sorguya geç</button>
         </div>
       </div>
     </div>`;

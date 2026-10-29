@@ -71,7 +71,7 @@ window.KB = window.KB || {};
       const card = e.target.closest(".card"); if (!card) return;
       const id = card.dataset.card;
       drag = { id, card, sx: e.clientX, sy: e.clientY, moved: false };
-      if (id !== "merkez") card.setPointerCapture(e.pointerId);
+      if (id !== "merkez") { try { card.setPointerCapture(e.pointerId); } catch (err) { /* etkin işaretçi yoksa (sentetik olay) sürükleme yine çalışır */ } }
     });
     document.addEventListener("pointermove", (e) => {
       if (!drag || drag.id === "merkez") return;
