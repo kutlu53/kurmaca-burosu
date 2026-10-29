@@ -35,6 +35,12 @@
   <circle cx="32" cy="27" r="3" fill="var(--ic-bg,#ece6d7)"/>
   <circle cx="42" cy="27" r="3" fill="var(--ic-bg,#ece6d7)"/>
 </symbol>
+<symbol id="ic-tur-anlatici" viewBox="0 0 64 64">
+  <!-- bakış: göz ve bakış çizgileri -->
+  <path d="M4 30Q24 10 44 30Q24 50 4 30Z" fill="currentColor"/>
+  <circle cx="24" cy="30" r="8" fill="var(--ic-bg,#ece6d7)"/><circle cx="24" cy="30" r="4" fill="currentColor"/>
+  <path d="M48 22L60 16M50 30H62M48 38L60 44" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+</symbol>
 <symbol id="ic-tur-zaman" viewBox="0 0 64 64">
   <rect x="14" y="6" width="36" height="5" rx="1" fill="currentColor"/>
   <rect x="14" y="53" width="36" height="5" rx="1" fill="currentColor"/>

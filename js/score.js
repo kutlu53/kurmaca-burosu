@@ -60,7 +60,7 @@ window.KB = window.KB || {};
     const nameOf = (id) => id === "merkez" ? "Gizli merkez" : CASE.clues[id].label;
     const findT = (q, v) => { const o = q.options.find((x) => x.id === v); return o ? o.t : ""; };
     const q = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""').replace(/\r?\n/g, " ") + '"';
-    const head = ["vaka", "tarih", "unvan", "puan", "puan_max", "sure", "buyutec", "delil", "delil_max", "bag", "bag_ustaca", "bag_guclu", "konum", "suclu", "suclu_dogru", "neden", "neden_dogru", "gizli_merkez", "gizli_merkez_derece", "rapor", "baglar"];
+    const head = ["vaka", "tarih", "unvan", "puan", "puan_max", "sure", "buyutec", "delil", "delil_max", "bag", "bag_ustaca", "bag_guclu", "konum", "suclu", "suclu_dogru", "neden", "neden_dogru", "gizli_merkez", "gizli_merkez_derece", "rapor", "baglar", "gerekceler"];
     const row = [
       CASE.title, new Date(S.solvedAt || Date.now()).toISOString().slice(0, 10), r.rank, r.pts, r.max,
       KB.fmtTime((S.solvedAt || Date.now()) - S.start), S.hints, r.clues, CLUE_IDS.length,
@@ -68,7 +68,8 @@ window.KB = window.KB || {};
       S.loc.done ? (S.loc.ans === CASE.location.answer ? "doğru" : "yanlış") : "yapılmadı",
       findT(F.who, S.fin.who), r.whoOk ? 1 : 0, findT(F.why, S.fin.why), r.whyOk ? 1 : 0,
       r.cOpt ? r.cOpt.t : "", r.cOpt ? r.cOpt.grade : "", S.fin.report.trim(),
-      S.conns.map((c) => `[${KB.GRADES[c.grade]}] ${nameOf(c.a)} <-> ${nameOf(c.b)} (${KB.TYPES[c.type]})`).join(" | ")
+      S.conns.map((c) => `[${KB.GRADES[c.grade]}] ${nameOf(c.a)} <-> ${nameOf(c.b)} (${KB.TYPES[c.type]})`).join(" | "),
+      S.conns.filter((c) => c.note).map((c) => `${nameOf(c.a)} <-> ${nameOf(c.b)}: ${c.note}`).join(" | ")
     ];
     return "﻿" + head.join(";") + "\n" + row.map(q).join(";") + "\n";
   };
@@ -90,7 +91,7 @@ window.KB = window.KB || {};
       `Gizli merkez: ${r.cOpt ? r.cOpt.t : "-"}`,
       `Rapor: ${S.fin.report.trim() || "-"}`,
       `Bağ listesi:`,
-      ...S.conns.map((c) => `  - [${KB.GRADES[c.grade]}] ${nameOf(c.a)} <-> ${nameOf(c.b)} (${KB.TYPES[c.type]})`)
+      ...S.conns.map((c) => `  - [${KB.GRADES[c.grade]}] ${nameOf(c.a)} <-> ${nameOf(c.b)} (${KB.TYPES[c.type]})${c.note ? ` · gerekçe: ${c.note}` : ""}`)
     ].join("\n");
   };
 })();

@@ -37,7 +37,7 @@ f.onload = async () => {
       ok("yardım çipi var", !!$("[data-act=guide]"));
       click("[data-act=helpToggle]"); ok("yardım kapatılınca ? gizlenir", !$("[data-act=guide]") && /kapalı/.test(toast()));
       click("[data-act=helpToggle]"); ok("yardım yeniden açılır", !!$("[data-act=guide]"));
-      click("[data-act=guide]"); ok("rehber: 6 adım + 6 tür", $$(".guide-steps li").length === 6 && $$(".guide .tdefs li").length === 6);
+      click("[data-act=guide]"); ok("rehber: 6 adım + 7 tür", $$(".guide-steps li").length === 6 && $$(".guide .tdefs li").length === 7);
       key(d, "Escape"); ok("Esc rehberi kapatır", !$("#guideSheet"));
       click("[data-act=audio]"); ok("ses açılır", w.KB.audio.enabled && /Ses/.test($("[data-act=audio]").textContent));
       click("[data-act=audio]"); ok("ses kapanır", !w.KB.audio.enabled);
@@ -108,7 +108,7 @@ f.onload = async () => {
       ok("19 kart (18 + merkez), polaroid öğeleri", $$(".card").length === 19 && $$(".card .art .ic").length === 19 && /9\.20/.test($('.card[data-card=saatler] .cap').textContent));
       tap("saatler"); ok("seçim çubuğu", !!$(".sel-bar") && S().sel === "saatler");
       click("[data-act=cancel]"); ok("Bırak", !S().sel && !$(".sel-bar"));
-      tap("saatler"); tap("umutsaat"); ok("tür seçici: 6 tür + Türler?", $$(".tbtn").length === 6 && !!$("[data-act=typeHelp]"));
+      tap("saatler"); tap("umutsaat"); ok("tür seçici: 7 tür + Türler?", $$(".tbtn").length === 7 && !!$("[data-act=typeHelp]") && !!$("[data-act=ctype][data-t=anlatici]"));
       click("[data-act=cancel]"); ok("Vazgeç", !S().pending);
       tap("saatler"); tap("umutsaat"); click("[data-act=ctype][data-t=leitmotif]");
       ok("ustaca bağ + bildirim rozeti", S().conns[0].grade === "ustaca" && /Ustaca/.test(toast()) && $$(".conn").length === 1);
@@ -116,6 +116,14 @@ f.onload = async () => {
       tap("kutu"); tap("fis"); click("[data-act=ctype][data-t=zaman]"); ok("yanlış tür: derece düşer + öneri", S().conns[1].grade === "guclu" && /daha uygun/.test(S().conns[1].text));
       tap("eller"); tap("marti"); click("[data-act=ctype][data-t=kanit]"); ok("yanıltıcı ipucu: zayıf", S().conns[2].grade === "zayif" && /Yanıltıcı/.test(S().conns[2].short));
       tap("koku"); tap("anahtar"); click("[data-act=ctype][data-t=mekan]"); ok("köprü yok: yetersiz", S().conns[3].grade === "yetersiz");
+      ok("yetersiz bağda vurgulu Gerekçe düğmesi", !!$(".conn.own .note-btn"));
+      /* gerekçe, sonradan silinmeyecek bir bağa (eller–martı) yazılır */
+      click('[data-act=noteEdit][data-k="eller|marti"]'); ok("gerekçe formu açılır", !!$(".note-form input"));
+      $(".note-form input").value = "Kokunun geldiği kapıdan anahtar sahibi girdi."; $(".note-form").dispatchEvent(new w.Event("submit", { bubbles: true, cancelable: true }));
+      ok("gerekçe kaydedilir ve görünür", S().conns[2].note && /Kokunun/.test($(".conn .note").textContent) && /kaydedildi/.test(toast()));
+      ok("gerekçe puanı değiştirmez", w.KB.score(S(), w.KB.CASE).pts === 18 + 3 + 2 + 0 + 0 + 0 + 1 /* delil + bağlar + konum(yanlış)+marti */);
+      tap("fis"); tap("anlatici"); click("[data-act=ctype][data-t=anlatici]"); ok("anlatıcı türüyle bağ: ustaca", S().conns[4].grade === "ustaca");
+      click('[data-act=delc][data-k="fis|anlatici"]');
       tap("merkez"); ok("merkez seçilince tanım (yardım açık)", /Gizli merkez/.test($(".sel-bar").textContent));
       tap("kart"); click("[data-act=ctype][data-t=metafor]"); ok("merkeze akan: güçlü", S().conns[4].grade === "guclu" && /Merkeze akıyor/.test(S().conns[4].short));
       tap("merkez"); tap("anahtar"); click("[data-act=ctype][data-t=kanit]"); ok("merkeze akmayan: zayıf", S().conns[5].grade === "zayif");
@@ -157,6 +165,8 @@ f.onload = async () => {
       ok("puan beklenenle aynı", sc.pts === exp, `${sc.pts}/${sc.max} beklenen ${exp}`);
       ok("unvan eşiği", sc.rank === (sc.pts / sc.max >= .75 ? "Düşünceli Okur" : sc.pts / sc.max >= .5 ? "Dikkatli Okur" : "Düz Okur"), sc.rank);
       ok("özet metni tutarlı", new RegExp(`${sc.pts}/${sc.max} puan`).test($("#sumText").textContent) && /Konum: yanlış/.test($("#sumText").textContent));
+      ok("özette gerekçe var", /gerekçe: Kokunun/.test($("#sumText").textContent));
+      ok("CSV'de gerekçe sütunu", /;gerekceler\n/.test(w.KB.summaryCSV(st, sc, w.KB.CASE)) && /Kokunun/.test(w.KB.summaryCSV(st, sc, w.KB.CASE)));
       ok("taşma yok (sonuç)", overflow());
       partial(); phase = 2; f.src = BASE + "?r=2"; return;
     }

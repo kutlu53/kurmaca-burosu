@@ -6,7 +6,7 @@ const root = process.argv[2] || ".", want = process.argv[3];
 const w = { window: null }; w.window = w; vm.createContext(w);
 for (const f of fs.readdirSync(root + "/data").filter((f) => /^case-\d+\.js$/.test(f)).sort()) vm.runInContext(fs.readFileSync(root + "/data/" + f, "utf8"), w, { filename: f });
 const icons = new Set([...fs.readFileSync(root + "/assets/icons.svg", "utf8").matchAll(/<symbol id="ic-([^"]+)"/g)].map((m) => m[1]));
-const TYPES = ["leitmotif", "metafor", "mekan", "diyalog", "zaman", "kanit"], GRADES = ["ustaca", "guclu", "zayif", "yetersiz"];
+const TYPES = ["leitmotif", "metafor", "mekan", "diyalog", "anlatici", "zaman", "kanit"], GRADES = ["ustaca", "guclu", "zayif", "yetersiz"];
 let total = 0;
 for (const C of w.CASES) {
   if (want && C.id !== want) continue;

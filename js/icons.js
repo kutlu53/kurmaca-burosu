@@ -1,7 +1,7 @@
 /* ÜRETİLMİŞ DOSYA — elle düzenleme. Kaynak: assets/icons.svg · Üret: node build.js icons
-   68 simge: tur-leitmotif, tur-metafor, tur-mekan, tur-diyalog, tur-zaman, tur-kanit, saatler, marti, koku, tekne, yastik, kart, anahtar, lup, otobus, hapsetti, cay, fis, eller, kol-saati, mekanizma, surcme, kutu, anlatici, saat, soru, kalp, pencere, kepenk, usta, kenan, selma, umut, bos-cerceve, maske, kese, yumruk, saat-kurdele, saat-isleyen, iki-el, palto, kapot, harf, kardes, ruzgar, merdiven, tirnak, mum, meydan, biyik, komiser, general, ates, hayalet, curuk, usul, goz, masa, p-petrovic, p-general, p-bekci, p-katip, liman, baskent, dag-ikon, koy, merkez, raptiye */
+   69 simge: tur-leitmotif, tur-metafor, tur-mekan, tur-diyalog, tur-anlatici, tur-zaman, tur-kanit, saatler, marti, koku, tekne, yastik, kart, anahtar, lup, otobus, hapsetti, cay, fis, eller, kol-saati, mekanizma, surcme, kutu, anlatici, saat, soru, kalp, pencere, kepenk, usta, kenan, selma, umut, bos-cerceve, maske, kese, yumruk, saat-kurdele, saat-isleyen, iki-el, palto, kapot, harf, kardes, ruzgar, merdiven, tirnak, mum, meydan, biyik, komiser, general, ates, hayalet, curuk, usul, goz, masa, p-petrovic, p-general, p-bekci, p-katip, liman, baskent, dag-ikon, koy, merkez, raptiye */
 window.KB = window.KB || {};
-KB.ICON_IDS = ["tur-leitmotif","tur-metafor","tur-mekan","tur-diyalog","tur-zaman","tur-kanit","saatler","marti","koku","tekne","yastik","kart","anahtar","lup","otobus","hapsetti","cay","fis","eller","kol-saati","mekanizma","surcme","kutu","anlatici","saat","soru","kalp","pencere","kepenk","usta","kenan","selma","umut","bos-cerceve","maske","kese","yumruk","saat-kurdele","saat-isleyen","iki-el","palto","kapot","harf","kardes","ruzgar","merdiven","tirnak","mum","meydan","biyik","komiser","general","ates","hayalet","curuk","usul","goz","masa","p-petrovic","p-general","p-bekci","p-katip","liman","baskent","dag-ikon","koy","merkez","raptiye"];
+KB.ICON_IDS = ["tur-leitmotif","tur-metafor","tur-mekan","tur-diyalog","tur-anlatici","tur-zaman","tur-kanit","saatler","marti","koku","tekne","yastik","kart","anahtar","lup","otobus","hapsetti","cay","fis","eller","kol-saati","mekanizma","surcme","kutu","anlatici","saat","soru","kalp","pencere","kepenk","usta","kenan","selma","umut","bos-cerceve","maske","kese","yumruk","saat-kurdele","saat-isleyen","iki-el","palto","kapot","harf","kardes","ruzgar","merdiven","tirnak","mum","meydan","biyik","komiser","general","ates","hayalet","curuk","usul","goz","masa","p-petrovic","p-general","p-bekci","p-katip","liman","baskent","dag-ikon","koy","merkez","raptiye"];
 KB.icon = function (id, cls) { return '<svg class="ic ' + (cls || "") + '" aria-hidden="true"><use href="#ic-' + id + '"/></svg>'; };
 (function () {
   const put = function () { document.body.insertAdjacentHTML("afterbegin", `<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -23,6 +23,11 @@ KB.icon = function (id, cls) { return '<svg class="ic ' + (cls || "") + '" aria-
   <circle cx="22" cy="27" r="3" fill="var(--ic-bg,#ece6d7)"/>
   <circle cx="32" cy="27" r="3" fill="var(--ic-bg,#ece6d7)"/>
   <circle cx="42" cy="27" r="3" fill="var(--ic-bg,#ece6d7)"/>
+</symbol>
+<symbol id="ic-tur-anlatici" viewBox="0 0 64 64">
+  <path d="M4 30Q24 10 44 30Q24 50 4 30Z" fill="currentColor"/>
+  <circle cx="24" cy="30" r="8" fill="var(--ic-bg,#ece6d7)"/><circle cx="24" cy="30" r="4" fill="currentColor"/>
+  <path d="M48 22L60 16M50 30H62M48 38L60 44" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
 </symbol>
 <symbol id="ic-tur-zaman" viewBox="0 0 64 64">
   <rect x="14" y="6" width="36" height="5" rx="1" fill="currentColor"/>

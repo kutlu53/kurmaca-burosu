@@ -6,7 +6,7 @@ window.KB = window.KB || {};
   "use strict";
 
   /* ---------- Ortak sabitler ---------- */
-  KB.TYPES = { leitmotif: "Leitmotif / İmge", metafor: "Metafor", mekan: "Mekân", diyalog: "Diyalog", zaman: "Zaman", kanit: "Kanıt" };
+  KB.TYPES = { leitmotif: "Leitmotif / İmge", metafor: "Metafor", mekan: "Mekân", diyalog: "Diyalog", anlatici: "Anlatıcı / Bakış açısı", zaman: "Zaman", kanit: "Kanıt" };
   KB.GRADES = { ustaca: "Ustaca", guclu: "Güçlü", zayif: "Zayıf", yetersiz: "Kanıt yetersiz" };
   KB.STEPS = [["dosya", "Dosya"], ["olay", "Olay Yeri"], ["sorgu", "Sorgu"], ["konum", "Konum"], ["pano", "Pano"], ["sucla", "Suçlama"]];
   /* Tek cümlelik tanımlar: yalnızca yardım açıkken, dokununca görünür (rapordaki birim adlarıyla uyumlu) */
@@ -15,6 +15,7 @@ window.KB = window.KB || {};
     metafor: "Bir nesne ya da görüntüyle bir duyguyu, bir durumu anlatma.",
     mekan: "Yerin ayrıntıları: koku, ses, görüntü. Ad verilmeden kurulan mekân.",
     diyalog: "Karakterin sözü: ne dediği kadar nasıl dediği ve ne demediği.",
+    anlatici: "Kimin gözünden, kimin sesiyle: anlatıcının gördüğü, sakladığı, yanıldığı yer.",
     zaman: "Ne zaman, ne kadar, hangi sırayla: günler, süreler, gecikmeler.",
     kanit: "Olayı çözen somut iz: kim, nasıl, nerede."
   };
@@ -222,14 +223,18 @@ window.KB = window.KB || {};
          ${helpOn && S.typeHelp ? `<ul class="tdefs">${Object.entries(TYPES).map(([k, v]) => `<li style="--c:var(--ip-${k})">${KB.icon("tur-" + k)}<b>${v}</b><span>${esc(KB.TYPE_DEFS[k])}</span></li>`).join("")}</ul>` : ""}</div>`
       : S.sel ? `<div class="picker sel-bar">${KB.icon(artOf(S.sel))}<span>İkinci karta dokun.${helpOn && S.sel === "merkez" ? ` <i class="muted">${esc(KB.CENTER_DEF)}</i>` : ""}</span><button class="btn ghost" data-act="cancel">Bırak</button></div>`
         : `<div class="hint-line muted">Kart → kart: ip. Sürükle: düzenle.</div>`;
+    /* Her bağa öğrenci tek satır gerekçe yazabilir ("kendi bağım"); puanlanmaz, öğretmen özetine ve CSV'ye gider. */
     const rows = S.conns.slice().reverse().map((c) => {
-      const k = c.a + "|" + c.b, open = openConns.has(k);
-      return `<div class="conn${open ? " open" : ""}">
+      const k = c.a + "|" + c.b, open = openConns.has(k), editing = S.noteEdit === k;
+      const noteUI = editing
+        ? `<form class="note-form" data-k="${k}"><input name="note" maxlength="160" value="${esc(c.note || "")}" placeholder="Bu bağı neden kurdun?" aria-label="Gerekçe" autofocus><button class="btn solid" type="submit">Kaydet</button><button class="btn ghost" type="button" data-act="noteCancel">Vazgeç</button></form>`
+        : c.note ? `<div class="note">${KB.icon("harf")}<span>${esc(c.note)}</span><button class="link" data-act="noteEdit" data-k="${k}">Düzenle</button></div>` : "";
+      return `<div class="conn${open ? " open" : ""}${c.grade === "yetersiz" ? " own" : ""}">
         <button class="grade g-${c.grade}" data-act="connMore" data-k="${k}" aria-expanded="${open}">${GRADES[c.grade]}</button>
         <span class="pair">${KB.icon(artOf(c.a))}<i class="arrow">↔</i>${KB.icon(artOf(c.b))}<span class="ttag" style="--c:var(--ip-${c.type})" title="${TYPES[c.type]}">${KB.icon("tur-" + c.type)}</span></span>
         <span class="why">${esc(c.short || c.text)}</span>
-        <button class="x" data-act="delc" data-k="${k}" aria-label="Bağı kaldır">×</button>
-        ${open ? `<div class="long">${esc(c.text)}</div>` : ""}</div>`;
+        <span class="conn-btns">${!c.note && !editing ? `<button class="link note-btn" data-act="noteEdit" data-k="${k}" title="Kendi gerekçeni yaz">Gerekçe</button>` : ""}<button class="x" data-act="delc" data-k="${k}" aria-label="Bağı kaldır">×</button></span>
+        ${open ? `<div class="long">${esc(c.text)}</div>` : ""}${noteUI}</div>`;
     }).join("");
     return `<div class="board-wrap">
       ${picker}
@@ -439,6 +444,13 @@ window.KB = window.KB || {};
     if (S.view === "sucla" && !S.solved) { const t = $("#report"); if (t) S.fin.report = t.value; }
   }
   document.addEventListener("input", (e) => { if (e.target.id === "report") { S.fin.report = e.target.value; save(); } });
+  document.addEventListener("submit", (e) => {
+    const f = e.target.closest(".note-form"); if (!f) return;
+    e.preventDefault();
+    const [a, b] = f.dataset.k.split("|"), c = S.conns.find((x) => x.a === a && x.b === b);
+    if (c) { const v = f.querySelector("input").value.trim(); if (v) c.note = v; else delete c.note; }
+    S.noteEdit = null; save(); render(); if (c && c.note) toast("Gerekçe kaydedildi; öğretmen özetinde görünür.");
+  });
 
   /* Olay yeri parçalarını yerinde tazeler (tam çizim yok: kaydırma ve odak korunur). */
   function refreshOlay() {
@@ -551,6 +563,8 @@ window.KB = window.KB || {};
     cancel() { S.pending = null; S.sel = null; save(); render(); },
     delc(t) { const [a, b] = t.dataset.k.split("|"); S.conns = S.conns.filter((c) => !(c.a === a && c.b === b)); openConns.delete(t.dataset.k); save(); render(); },
     connMore(t) { const k = t.dataset.k; if (openConns.has(k)) openConns.delete(k); else openConns.add(k); render(); },
+    noteEdit(t) { S.noteEdit = t.dataset.k; render(); const i = document.querySelector(".note-form input"); if (i) i.focus(); },
+    noteCancel() { S.noteEdit = null; save(); render(); },
     accuse() {
       collectForm();
       const miss = []; if (!S.fin.who) miss.push("suçlu"); if (!S.fin.why) miss.push("neden"); if (!S.fin.center) miss.push("gizli merkez");

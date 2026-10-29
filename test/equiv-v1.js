@@ -17,14 +17,17 @@ const nameOf=id=>id==="merkez"?"Gizli merkez":CASE.clues[id].label;
 // v2 bağlamı
 const w={Date,Math,String,Object,JSON,setTimeout,clearTimeout,document:{querySelector:()=>null,addEventListener(){}}};w.window=w;vm.createContext(w);
 for(const f of["data/case-01.js","js/score.js","js/board.js"])vm.runInContext(fs.readFileSync(root+"/"+f,"utf8"),w,{filename:f});
-vm.runInContext(`KB.TYPES={leitmotif:"Leitmotif / İmge",metafor:"Metafor",mekan:"Mekân",diyalog:"Diyalog",zaman:"Zaman",kanit:"Kanıt"};KB.GRADES={ustaca:"Ustaca",guclu:"Güçlü",zayif:"Zayıf",yetersiz:"Kanıt yetersiz"};KB.esc=s=>s;`,w);
-const CASE=w.CASES[0],KB=w.KB,IDS=Object.keys(CASE.clues),TYPES=Object.keys(KB.TYPES);
+vm.runInContext(`KB.TYPES={leitmotif:"Leitmotif / İmge",metafor:"Metafor",mekan:"Mekân",diyalog:"Diyalog",anlatici:"Anlatıcı / Bakış açısı",zaman:"Zaman",kanit:"Kanıt"};KB.GRADES={ustaca:"Ustaca",guclu:"Güçlü",zayif:"Zayıf",yetersiz:"Kanıt yetersiz"};KB.esc=s=>s;`,w);
+const CASE=w.CASES[0],KB=w.KB,IDS=Object.keys(CASE.clues);
+// v1'in 6 türü karşılaştırılır; v2'nin yedinci türü (anlatici) v1'de yok, öneri metninden ayıklanır
+const TYPES=["leitmotif","metafor","mekan","diyalog","zaman","kanit"];
+const strip=t=>t.replace(" / Anlatıcı / Bakış açısı","");
 let fails=0;const fail=m=>{fails++;if(fails<15)console.log("FARK:",m)};
 // 1) evalConn: bütün çiftler × bütün türler
 const nodes=["merkez",...IDS];let n=0;
 for(let i=0;i<nodes.length;i++)for(let j=0;j<nodes.length;j++){if(i===j)continue;for(const t of TYPES){
  const a=v1.api.evalConn(nodes[i],nodes[j],t),b=KB.evalConn(nodes[i],nodes[j],t,CASE);n++;
- if(a.grade!==b.grade||a.text!==b.text)fail(`evalConn ${nodes[i]}-${nodes[j]}/${t}: v1=${a.grade} v2=${b.grade}`);
+ if(a.grade!==b.grade||a.text!==strip(b.text))fail(`evalConn ${nodes[i]}-${nodes[j]}/${t}: v1=${a.grade} v2=${b.grade}`);
 }}
 console.log("evalConn karşılaştırması:",n);
 // 2) score + summaryText: rastgele senaryolar

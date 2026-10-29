@@ -3,6 +3,7 @@
 Lise edebiyat dersi için **polisiye kurgulu bir okuma oyunu**. "Öykü ve Romanlara Kurmaca Ağından Bakmak" projesindeki fiziksel kurmaca ağı (kaideye gerilmiş iplerle gösterilen metafor, imge, diyalog, mekân, leitmotif bağlantıları) tarayıcıda çalışan bir dedektif panosuna çevrildi.
 
 - Okur = dedektif · Ayrıntı = ipucu · Gizli merkez = çözülecek dava
+- Oyun fiziksel ağın yerine geçmez; sınıfta kurulan kurmaca ağına **hazırlık ve ölçme aracıdır**. Panoda öğrenci kendi bulduğu bağı tek satır gerekçeyle savunabilir; bu gerekçeler puanlanmaz, öğretmen özetine ve CSV'ye gider.
 - Her vaka iki soru taşır: **Ne oldu?** (olay örgüsü) ve **Bu öykü aslında ne anlatıyor?** (gizli merkez)
 
 **Oyna:** https://kutlu53.github.io/kurmaca-burosu/
@@ -13,7 +14,7 @@ Lise edebiyat dersi için **polisiye kurgulu bir okuma oyunu**. "Öykü ve Roman
 2. **Olay yeri** — resimli sahnelerde nesnelere dokun; anlatıcının cümlesi altyazı olarak gelir, delil tepsiye düşer. Tam metin "anlatı" düğmesinde, kitap sayfası görünümünde.
 3. **Sorgu** — dört tanık, ikonlu sorular, çizgi roman balonlu cevaplar; bazı cevaplar delil verir.
 4. **Konum** — öyküde adı geçmeyen mekânı delillerle tespit et.
-5. **Pano** — polaroid kartlar arasına ip ger, türünü seç (leitmotif, metafor, mekân, diyalog, zaman, kanıt); bağ derecelendirilir: ustaca / güçlü / zayıf / kanıt yetersiz.
+5. **Pano** — polaroid kartlar arasına ip ger, türünü seç (leitmotif/imge, metafor, mekân, diyalog, anlatıcı/bakış açısı, zaman, kanıt); bağ derecelendirilir: ustaca / güçlü / zayıf / kanıt yetersiz. Her bağa "Gerekçe" yazılabilir.
 6. **Suçlama** — suçlu, deliller, neden, gizli merkez ve kısa rapor.
 7. **Final** — animasyon, epilog, unvan rozeti (Düz / Dikkatli / Düşünceli Okur), öğretmen özeti (kopyala ya da CSV indir).
 

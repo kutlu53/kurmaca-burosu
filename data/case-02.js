@@ -66,7 +66,7 @@ window.CASES.push({
   clues: {
     kapot:    { label: "Eski paltoya “kapot” denmesi",                    short: "“Kapot”",          tag: "metafor",   art: "kapot",    caption: "Eski paltosuna palto bile demezdik; “kapot” derdik, yaşlı kadınların omzundaki o biçimsiz örtüye verilen adla." },
     harfler:  { label: "Bazı harflere gülümsemesi",                       short: "Harflere gülümseme", tag: "leitmotif", art: "harf",   caption: "bazı harflere gülümser, hatta dudaklarıyla onlara eşlik ederdi" },
-    kardes:   { label: "“Bırakın beni” — “Ben senin kardeşinim”",        short: "“Kardeşinim”",     tag: "diyalog",   art: "kardes",   caption: "“Bırakın beni, ne istiyorsunuz benden?” dedi. Sesinde öyle bir şey vardı ki o gün ben bambaşka bir cümle duydum: “Ben senin kardeşinim.”" },
+    kardes:   { label: "“Bırakın beni” — anlatıcının duyduğu “Ben senin kardeşinim”", short: "“Kardeşinim”", tag: "anlatici", art: "kardes", caption: "“Bırakın beni, ne istiyorsunuz benden?” dedi. Sesinde öyle bir şey vardı ki o gün ben bambaşka bir cümle duydum: “Ben senin kardeşinim.”" },
     ruzgar:   { label: "Dört yandan esen rüzgâr",                          short: "Rüzgâr",           tag: "mekan",     art: "ruzgar",   caption: "Bu şehirde rüzgâr dört yandan birden eser; sabah dokuzda işe gidenlerin alnına saplanır, burunlarını kızartır." },
     merdiven: { label: "Bulaşık suyu kokan karanlık merdiven",            short: "Karanlık merdiven", tag: "mekan",    art: "merdiven", caption: "Petroviç'in evine çıkan merdiven bulaşık suyu kokar, karanlıkta basamakları ezbere saymak gerekirdi." },
     tirnak:   { label: "Petroviç'in kaplumbağa kabuğu gibi tırnağı",      short: "Çarpık tırnak",    tag: "metafor",   art: "tirnak",   caption: "kaplumbağa kabuğu gibi kalın, çarpık başparmak tırnağıyla" },
@@ -122,7 +122,7 @@ window.CASES.push({
     lesson: "Yazar şehri adıyla söylemedi; rüzgârı, meydanı ve merdiveniyle kurdu. Dört yandan esen ayaz ve uçsuz bucaksız meydan taşraya değil, büyük ve soğuk bir başkente aittir; bulaşık sulu merdiven ise kat kat kiracıyla dolu bir şehir binasına. İyi okur söylenmeyeni ayrıntıdan çıkarır."
   },
 
-  centerFlow: ["kapot", "harfler", "kardes", "yaka", "onemli", "ates", "hayalet", "yeni", "tasarruf"],
+  centerFlow: ["kapot", "harfler", "kardes", "yaka", "onemli", "ates", "hayalet", "yeni", "tasarruf", "komiser", "usul"],
   centerText: {
     guclu: { short: "Merkeze akıyor",     text: "Bu ayrıntı merkeze akıyor; olayı değil, anlamı taşıyor." },
     zayif: { short: "Delil, anlam değil", text: "Bu delil olayı çözer (kim, nasıl) ama gizli merkezi taşımaz. Delil ile anlamı ayır." }
@@ -137,7 +137,7 @@ window.CASES.push({
   links: [
     { a: "harfler",  b: "yeni",     types: ["leitmotif"],            grade: "ustaca", short: "Harfler kaldı, gülümseme gitti",                       text: "Masaya yeni kâtip oturdu, harfler daha düzgün; ama onlara gülümseyen kimse yok. Leitmotif kaybın ne olduğunu söylüyor: iş değil, sevgi." },
     { a: "kapot",    b: "yaka",     types: ["metafor", "diyalog"],   grade: "guclu",  short: "Kapotla görünmez, paltoyla görünür",                   text: "Aynı adam: kapot sırtındayken alay konusu, palto sırtındayken şerefine çay verilen. Değişen o değil, kumaş." },
-    { a: "kardes",   b: "onemli",   types: ["diyalog"],              grade: "ustaca", short: "“Kardeşinim” ile “Siz kimsiniz?” karşı karşıya",         text: "İki cümle öykünün iki kutbu: biri insanı görür, öbürü rütbeyi. Akakiy ikisinin arasında ezilir." },
+    { a: "kardes",   b: "onemli",   types: ["diyalog", "anlatici"],  grade: "ustaca", short: "“Kardeşinim” ile “Siz kimsiniz?” karşı karşıya",         text: "İki cümle öykünün iki kutbu: biri insanı görür, öbürü rütbeyi. Akakiy ikisinin arasında ezilir." },
     { a: "ruzgar",   b: "meydan",   types: ["mekan"],                grade: "guclu",  short: "Şehir adı anılmadan kuruluyor",                        text: "Şehir adı hiç anılmadan mekân kuruluyor." },
     { a: "ruzgar",   b: "merdiven", types: ["mekan"],                grade: "guclu",  short: "Şehir adı anılmadan kuruluyor",                        text: "Şehir adı hiç anılmadan mekân kuruluyor." },
     { a: "meydan",   b: "merdiven", types: ["mekan"],                grade: "guclu",  short: "Şehir adı anılmadan kuruluyor",                        text: "Şehir adı hiç anılmadan mekân kuruluyor." },
@@ -149,16 +149,17 @@ window.CASES.push({
     { a: "ates",     b: "hayalet",  types: ["metafor", "zaman"],     grade: "guclu",  short: "Sayıklayan küfür hayalete dönüşüyor",                  text: "Hayatında küfretmemiş adam sayıklarken küfreder; sonra hayalet olup paltoları alır. Bastırılan öfke ölümden sonra çıkar." },
     { a: "hayalet",  b: "onemli",   types: ["metafor", "diyalog"],   grade: "guclu",  short: "Hayalet rütbeye bakmıyor",                              text: "Rütbeye bakmayan hayalet, rütbeden başka bir şeye bakmayan adamın paltosunu alır." },
     { a: "kapot",    b: "tirnak",   types: ["metafor"],              grade: "guclu",  short: "Yıpranmış şeylerin dünyası",                           text: "Kapot, tırnak, merdiven: öykünün nesneleri hep aşınmış. Yoksulluk anlatılmaz, gösterilir." },
-    { a: "harfler",  b: "kardes",   types: ["leitmotif", "diyalog"], grade: "guclu",  short: "Harflere gülümseyen adam insanlardan özür diliyor",     text: "Harflerle konuşan, insanlarla konuşamayan biri; “bırakın beni” derken bile özür dilercesine." },
+    { a: "harfler",  b: "kardes",   types: ["leitmotif", "diyalog", "anlatici"], grade: "guclu", short: "Harflere gülümseyen adam insanlardan özür diliyor", text: "Harflerle konuşan, insanlarla konuşamayan biri; “bırakın beni” derken bile özür dilercesine." },
     { a: "yaka",     b: "yeni",     types: ["diyalog", "zaman"],     grade: "guclu",  short: "Bir gün ilgi, bir hafta sonra unutuş",                 text: "Paltosunun yakasına dokunanlar, masasına oturan yeni kâtibi sormuyor." },
     { a: "usul",     b: "onemli",   types: ["diyalog"],              grade: "guclu",  short: "Usul, insanın önüne duvar",                             text: "Dilekçe yolunu anlatan usul ile “siz kimsiniz” azarı aynı kapıyı kapatır." },
     { a: "usul",     b: "komiser",  types: ["diyalog", "kanit"],     grade: "guclu",  short: "Her makam başka bir kapıyı gösteriyor",                text: "Komiser soruyu çevirir, Önemli Kişi usulü gösterir; ikisi de paltoyu aramaz." },
     { a: "biyik",    b: "meydan",   types: ["kanit", "mekan"],       grade: "guclu",  short: "Boş meydan hırsıza alan açıyor",                        text: "Hırsızlık ıssız meydanda olur; bekçi uzakta, ışık titrek. Mekân olayı hazırlıyor." },
     { a: "tasarruf", b: "harfler",  types: ["zaman", "leitmotif"],   grade: "guclu",  short: "Azla yetinmenin iki yüzü",                             text: "Harflerle mutlu olan adam mumsuz akşamlara da katlanır; öykü bunu erdem değil, görünmezlik olarak anlatır." },
     { a: "curuk",    b: "tasarruf", types: ["kanit", "zaman"],       grade: "guclu",  short: "Onarım olmayınca aylar biriktirmek",                   text: "Çürük kumaş onarılamayınca tek yol aylarca yokluk. Nesnenin hâli zamanı belirliyor." },
-    { a: "kardes",   b: "yeni",     types: ["diyalog", "leitmotif"], grade: "ustaca", short: "Kardeş unutulur, masa dolar",                           text: "“Kardeşinim” diyen adamın yerine ertesi hafta başkası oturur. Daire kardeşi değil, kâtibi hatırlar." },
+    { a: "kardes",   b: "yeni",     types: ["diyalog", "leitmotif", "anlatici"], grade: "ustaca", short: "Kardeş unutulur, masa dolar",               text: "“Kardeşinim” diyen adamın yerine ertesi hafta başkası oturur. Daire kardeşi değil, kâtibi hatırlar." },
     { a: "tanidik",  b: "yaka",     types: ["kanit", "diyalog"],     grade: "guclu",  short: "Herkes paltoyu tanıdı, kimse adamı",                   text: "Dairede yakasına dokunulan palto, meydanda bekçinin tanıdık sandığı palto: nesne görünür, insan değil." },
-    { a: "ates",     b: "kardes",   types: ["diyalog"],              grade: "ustaca", short: "Sayıklarken bile özür",                                text: "“Ekselans” diye özür dileyen ve küfreden aynı ağız: kardeşlik isteğiyle öfke aynı yerde." },
+    { a: "ates",     b: "kardes",   types: ["diyalog", "anlatici"],  grade: "ustaca", short: "Sayıklarken bile özür",                                text: "“Ekselans” diye özür dileyen ve küfreden aynı ağız: kardeşlik isteğiyle öfke aynı yerde." },
+    { a: "komiser",  b: "yaka",     types: ["diyalog", "metafor"],   grade: "guclu",  short: "Paltoya dokunan el, paltoyu aramayan makam",            text: "Dairede herkes paltoya dokunur; komiser paltoyu sormaz bile. Nesne görünür, insan ve kurum görünmez." },
     { a: "onemli",   b: "yaka",     types: ["diyalog", "metafor"],   grade: "guclu",  short: "Paltoyla kazanılan ses, azarla susturuluyor",          text: "Palto ona bir akşamlık ses verir; Önemli Kişi o sesi tek cümleyle alır." }
   ],
 
@@ -177,11 +178,13 @@ window.CASES.push({
       { id: "nefret", t: "Akakiy'den nefret ettiği için",                    art: "yumruk" },
       { id: "kanun",  t: "Usul öyle emrettiği için",                         art: "usul" }
     ] },
+    /* Ustaca seçenek, proje raporundaki B grubunun okumasından: palto giyinmek değil soyunmaktır; hırsızlık
+       Akakiy'den çok bürokrasi ve hukukun üstünden paltoyu alır, kurumların yozlaşması açığa çıkar. */
     center: { q: "Gizli merkez: Bu öykü aslında ne hakkında?", options: [
-      { id: "hirsizlik", t: "Bir palto hırsızlığı ve bir ölüm",                                       grade: "duz",    art: "maske",   note: "Bu, olay örgüsü. Düz okur burada durur." },
-      { id: "gorunmez",  t: "Görünmez bir insanın bir paltoyla görünür olup yeniden silinmesi",       grade: "ustaca", art: "palto",   note: "Kapot, harfler, yaka, yeni kâtip: bütün iplikler buraya akıyor." },
-      { id: "rutbe",     t: "Rütbenin merhameti yutması",                                             grade: "guclu",  art: "general", note: "Geçerli bir okuma. Komiser ve Önemli Kişi aynı dili konuşuyor." },
-      { id: "yoksulluk", t: "Terzilik ve yoksulluk",                                                  grade: "zayif",  art: "tirnak",  note: "Metinde var ama merkez değil; yoksulluk zemin, görünmezlik konu." }
+      { id: "hirsizlik", t: "Bir palto hırsızlığı ve bir ölüm",                                                          grade: "duz",    art: "maske",   note: "Bu, olay örgüsü. Düz okur burada durur." },
+      { id: "soyunma",   t: "Giyinmek değil soyunmak: palto çalınınca çıplak kalan Akakiy değil, bürokrasi ve hukuktur",  grade: "ustaca", art: "palto",   note: "Komiser, usul, Önemli Kişi, hayalet: hırsızlık kurumları çıplak bırakıyor. Bütün iplikler buraya akıyor." },
+      { id: "gorunmez",  t: "Görünmez bir insanın bir paltoyla görünür olup yeniden silinmesi",                          grade: "guclu",  art: "kardes",  note: "Geçerli bir okuma: kapot, harfler, yaka, yeni kâtip. Kurumlar bu silinmenin failidir." },
+      { id: "yoksulluk", t: "Terzilik ve yoksulluk",                                                                     grade: "zayif",  art: "tirnak",  note: "Metinde var ama merkez değil; yoksulluk zemin, sergilenme ve silinme konu." }
     ] },
     reportMin: 60
   },

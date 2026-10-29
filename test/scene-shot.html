@@ -55,6 +55,7 @@
       if (q.pano === "pick-help") { tap("yastik"); tap("durdum"); d.querySelector("[data-act=typeHelp]").click(); }
       if (q.pano === "sel") tap("hapsetti");
       if (q.pano === "more") { d.querySelector("[data-act=connMore]").click(); d.querySelector(".conns-head").scrollIntoView(); }
+      if (q.pano === "note") { d.querySelector('[data-act=noteEdit][data-k="eller|marti"]').click(); const i = d.querySelector(".note-form input"); i.value = "Yağlı eller suçu değil korkuyu gösteriyor."; d.querySelector(".note-form").dispatchEvent(new w.Event("submit", { bubbles: true, cancelable: true })); d.querySelector("[data-act=noteEdit]").click(); d.querySelector(".conns-head").scrollIntoView(); }
     }
     if ("sucla" in q) {
       d.querySelector("[data-act=book]").click();

@@ -23,7 +23,9 @@ for(const k of["who","why","center"]){same(v1.CASE.final[k].q,v2.final[k].q,"fin
 // clues
 const ids1=Object.keys(v1.CASE.clues),ids2=Object.keys(v2.clues);
 same(ids1,ids2,"clue ids");
-for(const id of ids1){const a=v1.CASE.clues[id],b=v2.clues[id];same({label:a.label,tag:a.tag,src:a.src},{label:b.label,tag:b.tag,src:b.src},"clue "+id);
+for(const id of ids1){const a=v1.CASE.clues[id],b=v2.clues[id];
+ // v2'de yedinci tür "anlatici": v1'de "diyalog" idi
+ same({label:a.label,tag:a.tag,src:a.src},{label:b.label,tag:b.tag==="anlatici"?"diyalog":b.tag,src:b.src},"clue "+id);
  for(const f of["short","art","caption"])if(!b[f])errs.push("EKSİK "+f+": "+id);
  if(b.short&&b.short.split(/\s+/).length>3)errs.push("short >3 kelime: "+id);}
 // captions verbatim
@@ -32,7 +34,7 @@ for(const id of ids2){const c=v2.clues[id];const src=c.src?answers:storyText;if(
 // suspects
 same(v1.CASE.suspects.map(s=>({id:s.id,name:s.name,role:s.role,qs:s.qs})),v2.suspects.map(s=>({id:s.id,name:s.name,role:s.role,qs:s.qs.map(({q,a,clue})=>clue?{q,a,clue}:{q,a})})),"suspects");
 // links
-same(v1.CASE.links,v2.links.map(({a,b,types,grade,text})=>({a,b,types,grade,text})),"links");
+same(v1.CASE.links,v2.links.map(({a,b,types,grade,text})=>({a,b,types:types.filter(t=>t!=="anlatici"),grade,text})),"links (anlatici türü hariç)");
 for(const l of v2.links){if(!l.short)errs.push("link short eksik: "+l.a+"-"+l.b);if(!v2.clues[l.a]||!v2.clues[l.b])errs.push("link bilinmeyen id: "+l.a+"-"+l.b);}
 // scenes cover 14 text clues exactly once
 const hs=v2.scenes.flatMap(s=>s.hotspots.map(h=>h.clue));

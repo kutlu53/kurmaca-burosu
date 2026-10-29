@@ -26,6 +26,7 @@
   --ip-metafor:var(--string);
   --ip-mekan:#7fa08a;
   --ip-diyalog:var(--paper-2);
+  --ip-anlatici:color-mix(in srgb,var(--string) 45%,var(--muted));
   --ip-zaman:#d4823a;
   --ip-kanit:#8f9bb0;
   /* yazı tipleri (çevrimdışı yedekli) */
@@ -473,6 +474,16 @@ textarea{width:100%;min-height:120px;font-family:var(--f-text);font-size:16px;li
 .conn .ttag .ic{width:12px;height:12px;color:var(--c)}
 .conn .why{font-size:14px;color:var(--fg);min-width:0}
 .conn .long{grid-column:1/-1;font-family:var(--f-text);font-size:15px;line-height:1.5;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+.conn-btns{display:inline-flex;align-items:center;gap:4px}
+.conn .note-btn{font-size:12px;color:var(--muted);text-decoration:none;border:1px dashed var(--line);border-radius:2px;padding:2px 6px;margin:0}
+.conn.own .note-btn{color:var(--brass);border-color:var(--brass)}
+.conn .note-btn:hover{color:var(--fg);border-style:solid}
+.note-form{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;align-items:center;border-top:1px dashed var(--line);padding-top:8px}
+.note-form input{flex:1;min-width:200px;padding:8px 10px;border:1px solid var(--line);border-radius:2px;background:var(--desk);color:var(--fg);font:inherit;font-size:14px}
+.note-form .btn{padding:6px 12px;font-size:13px;min-height:0}
+.conn .note{grid-column:1/-1;display:flex;gap:8px;align-items:center;border-top:1px dashed var(--line);padding-top:8px;font-family:var(--f-text);font-size:15px;color:var(--fg)}
+.conn .note .ic{width:16px;height:16px;color:var(--brass);flex:none}
+.conn .note .link{font-size:12px;color:var(--muted);margin-left:auto}
 .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:20px;line-height:1;padding:2px 6px}
 .x:hover{color:var(--fg)}
 @media (max-width:600px){.conn{grid-template-columns:auto minmax(0,1fr) auto}.conn .why{grid-column:1/3}}

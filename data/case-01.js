@@ -84,7 +84,7 @@ window.CASES.push({
     kurmadi:   { label: "Usta saati onarabilirdi ama onarmadı",              short: "Onarmadı",          tag: "diyalog",   art: "mekanizma", caption: "Ama onarmadım. Onu Mürüvvet kurardı, ben değil.", src: "sorgu" },
     surcme:    { label: "Kenan: “Bir saatçiye... yani bir tanıdığa uğradım.”", short: "Dil sürçmesi",    tag: "diyalog",   art: "surcme",    caption: "Sonra bir saatçiye... yani bir tanıdığa uğradım.", src: "sorgu" },
     kutu:      { label: "Kenan sabah otobüse mendile sarılı bir kutuyla bindi", short: "Mendilli kutu",  tag: "kanit",     art: "kutu",      caption: "Kucağında küçük bir kutu vardı, mendile sarılıydı.", src: "sorgu" },
-    anlatici:  { label: "Anlatıcı fişi gördü ama okumadı",                   short: "Okumadı",           tag: "diyalog",   art: "anlatici",  caption: "Okusaydım bir şeyi bozacakmışım gibi geldi.", src: "sorgu" }
+    anlatici:  { label: "Anlatıcı fişi gördü ama okumadı",                   short: "Okumadı",           tag: "anlatici",  art: "anlatici",  caption: "Okusaydım bir şeyi bozacakmışım gibi geldi.", src: "sorgu" } /* v1'de "diyalog"; v2'de yedinci tür */
   },
 
   /* Sorgu. Her karakterin 3 sorusu; clue alanı olan cevap deftere delil ekler. icon: soru kartı ikonu. */
@@ -166,9 +166,10 @@ window.CASES.push({
     { a: "marti",     b: "koku",      types: ["mekan"],                           grade: "guclu",  short: "Deniz anılmadan mekân kuruluyor",                              text: "Deniz hiç anılmadan mekân kuruluyor." },
     { a: "marti",     b: "tekne",     types: ["mekan"],                           grade: "guclu",  short: "Deniz anılmadan mekân kuruluyor",                              text: "Deniz hiç anılmadan mekân kuruluyor." },
     { a: "koku",      b: "tekne",     types: ["mekan"],                           grade: "guclu",  short: "Deniz anılmadan mekân kuruluyor",                              text: "Deniz hiç anılmadan mekân kuruluyor." },
-    { a: "eller",     b: "anlatici",  types: ["diyalog", "kanit"],                grade: "guclu",  short: "Umut suçlanmaktan korkuyor ama kendini savunmuyor",            text: "Umut suçlanmaktan korkuyor ama kendini savunmuyor. Anlatıcı neyi koruyor?" },
-    { a: "anlatici",  b: "fis",       types: ["kanit", "diyalog"],                grade: "ustaca", short: "Güvenilir ama seçici anlatıcı: bozmak istemediği bir şey var", text: "Anlatıcı fişi gördü, okumadı. Bilmek istemediği değil, bozmak istemediği bir şey var. Güvenilir ama seçici bir anlatıcı." },
-    { a: "anlatici",  b: "umutsaat",  types: ["leitmotif"],                       grade: "guclu",  short: "Anlatıcı olayı içeriden anlatıyor",                            text: "Anlatıcı da durmuş zamanın içinde. Olayı dışarıdan değil içeriden anlatıyor." }
+    /* "anlatici" türü v1'de yoktu; dizilerin sonuna eklendi (eşdeğerlik testi bu eki yok sayar) */
+    { a: "eller",     b: "anlatici",  types: ["diyalog", "kanit", "anlatici"],    grade: "guclu",  short: "Umut suçlanmaktan korkuyor ama kendini savunmuyor",            text: "Umut suçlanmaktan korkuyor ama kendini savunmuyor. Anlatıcı neyi koruyor?" },
+    { a: "anlatici",  b: "fis",       types: ["kanit", "diyalog", "anlatici"],    grade: "ustaca", short: "Güvenilir ama seçici anlatıcı: bozmak istemediği bir şey var", text: "Anlatıcı fişi gördü, okumadı. Bilmek istemediği değil, bozmak istemediği bir şey var. Güvenilir ama seçici bir anlatıcı." },
+    { a: "anlatici",  b: "umutsaat",  types: ["leitmotif", "anlatici"],           grade: "guclu",  short: "Anlatıcı olayı içeriden anlatıyor",                            text: "Anlatıcı da durmuş zamanın içinde. Olayı dışarıdan değil içeriden anlatıyor." }
   ],
 
   /* Suçlama */
