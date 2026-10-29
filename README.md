@@ -30,6 +30,7 @@ Oyun kendiliğinden açıklama göstermez; öğretmenin 2-3 dakikalık sözlü g
 |---|---|---|
 | 01 · Dokuzu Yirmi Geçe | Bu oyun için yazılmış özgün öykü | tamam |
 | 02 · Palto | Gogol'ün *Palto*'sundan (1842, telifsiz) özgün Türkçe yeniden anlatım | taslak, gözden geçirilecek |
+| 03 · Kâtip Bartleby | Melville'in *Bartleby*'sinden (1853, telifsiz) özgün Türkçe yeniden anlatım; anlatıcı (avukat) aynı zamanda şüpheli | taslak, gözden geçirilecek |
 
 ## Çevrimdışı kullanım
 

@@ -31,7 +31,7 @@ f.onload = async () => {
   try {
     if (phase === 1) {
       /* ---------- Dosya ---------- */
-      ok("raf: iki vaka dosyası", $$(".file.closed").length === 2);
+      ok("raf: bütün vakalar (3)", $$(".file.closed").length === w.CASES.length && w.CASES.length === 3);
       ok("etkin dosya Vaka 01", /Dokuzu/.test($(".file.closed:not(.other) .file-title").textContent));
       ok("taşma yok (dosya)", overflow());
       ok("yardım çipi var", !!$("[data-act=guide]"));

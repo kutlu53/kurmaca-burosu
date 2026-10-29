@@ -1,7 +1,7 @@
 /* ÜRETİLMİŞ DOSYA — elle düzenleme. Kaynak: assets/icons.svg · Üret: node build.js icons
-   69 simge: tur-leitmotif, tur-metafor, tur-mekan, tur-diyalog, tur-anlatici, tur-zaman, tur-kanit, saatler, marti, koku, tekne, yastik, kart, anahtar, lup, otobus, hapsetti, cay, fis, eller, kol-saati, mekanizma, surcme, kutu, anlatici, saat, soru, kalp, pencere, kepenk, usta, kenan, selma, umut, bos-cerceve, maske, kese, yumruk, saat-kurdele, saat-isleyen, iki-el, palto, kapot, harf, kardes, ruzgar, merdiven, tirnak, mum, meydan, biyik, komiser, general, ates, hayalet, curuk, usul, goz, masa, p-petrovic, p-general, p-bekci, p-katip, liman, baskent, dag-ikon, koy, merkez, raptiye */
+   88 simge: tur-leitmotif, tur-metafor, tur-mekan, tur-diyalog, tur-anlatici, tur-zaman, tur-kanit, saatler, marti, koku, tekne, yastik, kart, anahtar, lup, otobus, hapsetti, cay, fis, eller, kol-saati, mekanizma, surcme, kutu, anlatici, saat, soru, kalp, pencere, kepenk, usta, kenan, selma, umut, bos-cerceve, maske, kese, yumruk, saat-kurdele, saat-isleyen, iki-el, palto, kapot, harf, kardes, ruzgar, merdiven, tirnak, mum, meydan, biyik, komiser, general, ates, hayalet, curuk, usul, goz, masa, p-petrovic, p-general, p-bekci, p-katip, liman, baskent, dag-ikon, koy, paravan, duvar, tercih, kek, ofke, sabah, kopya, pazar, tasinma, parmaklik, tabak, mektup, ogle, p-avukat, p-hindi, p-kiskac, p-zencefil, is-sokagi, universite, merkez, raptiye */
 window.KB = window.KB || {};
-KB.ICON_IDS = ["tur-leitmotif","tur-metafor","tur-mekan","tur-diyalog","tur-anlatici","tur-zaman","tur-kanit","saatler","marti","koku","tekne","yastik","kart","anahtar","lup","otobus","hapsetti","cay","fis","eller","kol-saati","mekanizma","surcme","kutu","anlatici","saat","soru","kalp","pencere","kepenk","usta","kenan","selma","umut","bos-cerceve","maske","kese","yumruk","saat-kurdele","saat-isleyen","iki-el","palto","kapot","harf","kardes","ruzgar","merdiven","tirnak","mum","meydan","biyik","komiser","general","ates","hayalet","curuk","usul","goz","masa","p-petrovic","p-general","p-bekci","p-katip","liman","baskent","dag-ikon","koy","merkez","raptiye"];
+KB.ICON_IDS = ["tur-leitmotif","tur-metafor","tur-mekan","tur-diyalog","tur-anlatici","tur-zaman","tur-kanit","saatler","marti","koku","tekne","yastik","kart","anahtar","lup","otobus","hapsetti","cay","fis","eller","kol-saati","mekanizma","surcme","kutu","anlatici","saat","soru","kalp","pencere","kepenk","usta","kenan","selma","umut","bos-cerceve","maske","kese","yumruk","saat-kurdele","saat-isleyen","iki-el","palto","kapot","harf","kardes","ruzgar","merdiven","tirnak","mum","meydan","biyik","komiser","general","ates","hayalet","curuk","usul","goz","masa","p-petrovic","p-general","p-bekci","p-katip","liman","baskent","dag-ikon","koy","paravan","duvar","tercih","kek","ofke","sabah","kopya","pazar","tasinma","parmaklik","tabak","mektup","ogle","p-avukat","p-hindi","p-kiskac","p-zencefil","is-sokagi","universite","merkez","raptiye"];
 KB.icon = function (id, cls) { return '<svg class="ic ' + (cls || "") + '" aria-hidden="true"><use href="#ic-' + id + '"/></svg>'; };
 (function () {
   const put = function () { document.body.insertAdjacentHTML("afterbegin", `<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -410,6 +410,100 @@ KB.icon = function (id, cls) { return '<svg class="ic ' + (cls || "") + '" aria-
   <rect x="18" y="32" width="28" height="22" fill="currentColor"/>
   <rect x="28" y="40" width="8" height="14" fill="var(--ic-bg,#ece6d7)"/>
   <path d="M4 56H60" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+</symbol>
+<symbol id="ic-paravan" viewBox="0 0 64 64">
+  <path d="M6 14L22 10V54L6 58Z" fill="currentColor"/><path d="M24 10L40 14V58L24 54Z" fill="currentColor" opacity=".75"/><path d="M42 14L58 10V54L42 58Z" fill="currentColor"/>
+  <path d="M10 20L18 18M10 44L18 42M46 20L54 18M46 44L54 42" stroke="var(--ic-bg,#ece6d7)" stroke-width="1.5" opacity=".6"/>
+</symbol>
+<symbol id="ic-duvar" viewBox="0 0 64 64">
+  <rect x="6" y="8" width="52" height="48" fill="currentColor"/>
+  <path d="M6 20H58M6 32H58M6 44H58M32 8V20M19 20V32M45 20V32M32 32V44M19 44V56M45 44V56" stroke="var(--ic-bg,#ece6d7)" stroke-width="2"/>
+</symbol>
+<symbol id="ic-tercih" viewBox="0 0 64 64">
+  <path d="M14 10H50Q58 10 58 18V36Q58 44 50 44H30L18 56V44H14Q6 44 6 36V18Q6 10 14 10Z" fill="currentColor"/>
+  <path d="M18 27H46" stroke="var(--ic-bg,#ece6d7)" stroke-width="5" stroke-linecap="round"/>
+</symbol>
+<symbol id="ic-kek" viewBox="0 0 64 64">
+  <path d="M10 34Q32 20 54 34L50 52H14Z" fill="currentColor"/>
+  <ellipse cx="32" cy="34" rx="22" ry="8" fill="var(--ic-a,#c9a45c)"/>
+  <circle cx="24" cy="33" r="2" fill="currentColor"/><circle cx="36" cy="31" r="2" fill="currentColor"/><circle cx="43" cy="35" r="2" fill="currentColor"/>
+</symbol>
+<symbol id="ic-ofke" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="22" fill="var(--ic-s,#c63b2f)"/>
+  <path d="M20 24L30 28M44 24L34 28M22 44Q32 36 42 44" fill="none" stroke="var(--ic-bg,#ece6d7)" stroke-width="3.5" stroke-linecap="round"/>
+</symbol>
+<symbol id="ic-sabah" viewBox="0 0 64 64">
+  <path d="M6 44H58" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+  <path d="M14 44A18 18 0 0 1 50 44Z" fill="var(--ic-a,#c9a45c)"/>
+  <path d="M32 14V8M18 20L14 16M46 20L50 16" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+</symbol>
+<symbol id="ic-kopya" viewBox="0 0 64 64">
+  <rect x="8" y="14" width="30" height="40" rx="2" fill="currentColor"/>
+  <rect x="24" y="8" width="30" height="40" rx="2" fill="var(--ic-bg,#ece6d7)" stroke="currentColor" stroke-width="3"/>
+  <path d="M30 18h18M30 26h18M30 34h12" stroke="currentColor" stroke-width="2.5"/>
+</symbol>
+<symbol id="ic-pazar" viewBox="0 0 64 64">
+  <rect x="8" y="12" width="48" height="44" rx="3" fill="var(--ic-bg,#ece6d7)" stroke="currentColor" stroke-width="3"/>
+  <rect x="8" y="12" width="48" height="12" fill="currentColor"/>
+  <path d="M20 8v8M44 8v8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  <path d="M36 32l10 10M46 32L36 42" stroke="var(--ic-s,#c63b2f)" stroke-width="3" stroke-linecap="round"/>
+</symbol>
+<symbol id="ic-tasinma" viewBox="0 0 64 64">
+  <rect x="8" y="26" width="34" height="28" fill="currentColor"/><path d="M8 26L16 16H48L42 26Z" fill="currentColor" opacity=".7"/>
+  <path d="M25 40h0" stroke="var(--ic-bg,#ece6d7)"/><path d="M14 34h22" stroke="var(--ic-bg,#ece6d7)" stroke-width="2"/>
+  <path d="M44 40h12M52 34l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<symbol id="ic-parmaklik" viewBox="0 0 64 64">
+  <rect x="8" y="8" width="48" height="48" fill="var(--ic-bg,#ece6d7)" stroke="currentColor" stroke-width="3"/>
+  <path d="M20 8V56M32 8V56M44 8V56M8 32H56" stroke="currentColor" stroke-width="3.5"/>
+  <path d="M14 50Q20 44 26 50" fill="none" stroke="var(--ic-a,#c9a45c)" stroke-width="2.5"/>
+</symbol>
+<symbol id="ic-tabak" viewBox="0 0 64 64">
+  <ellipse cx="32" cy="36" rx="24" ry="10" fill="currentColor"/>
+  <ellipse cx="32" cy="34" rx="16" ry="6" fill="var(--ic-bg,#ece6d7)"/>
+  <path d="M10 18h10M15 14v10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M48 12v12M46 12v6M50 12v6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+<symbol id="ic-mektup" viewBox="0 0 64 64">
+  <rect x="6" y="16" width="52" height="36" rx="2" fill="currentColor"/>
+  <path d="M6 18L32 38L58 18" fill="none" stroke="var(--ic-bg,#ece6d7)" stroke-width="3"/>
+  <path d="M14 46L26 34M50 46L38 34" stroke="var(--ic-bg,#ece6d7)" stroke-width="2" opacity=".6"/>
+</symbol>
+<symbol id="ic-ogle" viewBox="0 0 64 64">
+  <circle cx="32" cy="28" r="12" fill="var(--ic-a,#c9a45c)"/>
+  <path d="M32 6v6M32 44v6M10 28h6M48 28h6M16 12l4 4M48 12l-4 4M16 44l4-4M48 44l-4-4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+</symbol>
+<symbol id="ic-p-avukat" viewBox="0 0 64 64">
+  <path d="M8 60Q8 42 24 39Q32 43 40 39Q56 42 56 60Z" fill="currentColor"/>
+  <circle cx="32" cy="22" r="12" fill="currentColor"/>
+  <path d="M22 22a5 5 0 1 0 10 0a5 5 0 1 0-10 0M32 22h0" fill="none" stroke="var(--ic-bg,#ece6d7)" stroke-width="2"/><circle cx="40" cy="22" r="5" fill="none" stroke="var(--ic-bg,#ece6d7)" stroke-width="2"/>
+  <path d="M28 40L32 52L36 40" fill="var(--ic-bg,#ece6d7)"/>
+</symbol>
+<symbol id="ic-p-hindi" viewBox="0 0 64 64">
+  <path d="M8 60Q8 42 24 39Q32 43 40 39Q56 42 56 60Z" fill="currentColor"/>
+  <circle cx="32" cy="22" r="12" fill="currentColor"/>
+  <circle cx="26" cy="26" r="3" fill="var(--ic-s,#c63b2f)"/><circle cx="38" cy="26" r="3" fill="var(--ic-s,#c63b2f)"/>
+  <path d="M26 46Q32 50 38 46" fill="none" stroke="var(--ic-bg,#ece6d7)" stroke-width="2"/>
+</symbol>
+<symbol id="ic-p-kiskac" viewBox="0 0 64 64">
+  <path d="M8 60Q8 42 24 39Q32 43 40 39Q56 42 56 60Z" fill="currentColor"/>
+  <circle cx="32" cy="22" r="12" fill="currentColor"/>
+  <path d="M22 16Q32 10 42 16" fill="none" stroke="var(--ic-bg,#ece6d7)" stroke-width="2"/>
+  <path d="M48 46L58 36M58 36l-2 6M58 36l-6-2" fill="none" stroke="var(--ic-a,#c9a45c)" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+<symbol id="ic-p-zencefil" viewBox="0 0 64 64">
+  <path d="M12 60Q12 46 24 44Q32 47 40 44Q52 46 52 60Z" fill="currentColor"/>
+  <circle cx="32" cy="30" r="10" fill="currentColor"/>
+  <circle cx="48" cy="50" r="6" fill="var(--ic-a,#c9a45c)"/><circle cx="46" cy="49" r="1.2" fill="currentColor"/><circle cx="50" cy="52" r="1.2" fill="currentColor"/>
+</symbol>
+<symbol id="ic-is-sokagi" viewBox="0 0 64 64">
+  <rect x="6" y="14" width="18" height="42" fill="currentColor"/><rect x="26" y="6" width="14" height="50" fill="currentColor"/><rect x="42" y="18" width="16" height="38" fill="currentColor"/>
+  <path d="M10 22h10M10 30h10M10 38h10M30 14h6M30 22h6M30 30h6M30 38h6M46 26h8M46 34h8M46 42h8" stroke="var(--ic-bg,#ece6d7)" stroke-width="2"/>
+  <path d="M4 58H60" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+</symbol>
+<symbol id="ic-universite" viewBox="0 0 64 64">
+  <path d="M8 24L32 12L56 24Z" fill="currentColor"/><rect x="12" y="24" width="40" height="6" fill="currentColor"/>
+  <rect x="16" y="30" width="5" height="20" fill="currentColor"/><rect x="26" y="30" width="5" height="20" fill="currentColor"/><rect x="36" y="30" width="5" height="20" fill="currentColor"/><rect x="46" y="30" width="5" height="20" fill="currentColor"/>
+  <rect x="10" y="50" width="44" height="6" fill="currentColor"/>
 </symbol>
 <symbol id="ic-merkez" viewBox="0 0 64 64">
   <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="3"/>
