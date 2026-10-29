@@ -17,6 +17,12 @@ Lise edebiyat dersi için **polisiye kurgulu bir okuma oyunu**. "Öykü ve Roman
 6. **Suçlama** — suçlu, deliller, neden, gizli merkez ve kısa rapor.
 7. **Final** — animasyon, epilog, unvan rozeti (Düz / Dikkatli / Düşünceli Okur), öğretmen özeti (kopyala ya da CSV indir).
 
+## Oyun öncesi açıklama
+
+Oyun kendiliğinden açıklama göstermez; öğretmenin 2-3 dakikalık sözlü girişi önerilir ("Okur dedektif, ayrıntı ipucu; önce ne olduğunu, sonra öykünün aslında neyi anlattığını bulacaksınız"). İsteğe bağlı yardım **varsayılan olarak açıktır**: üst banttaki **?** düğmesi altı resimli adımı ve bağ türlerinin tek cümlelik tanımlarını gösterir; panoda "Türler?" bağlantısı aynı tanımları açar.
+
+Öğretmen yardımı kapatabilir (örneğin kontrol grubu için): adrese `#yardim=kapali` ekleyin (`…/kurmaca-burosu/#yardim=kapali`, ikinci vaka için `#vaka-02&yardim=kapali`) ya da sayfanın altındaki "Yardım açık/kapalı" düğmesini kullanın. Tercih tarayıcıda saklanır; puanlama değişmez.
+
 ## Vakalar
 
 | Vaka | Eser | Durum |

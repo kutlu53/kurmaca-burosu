@@ -17,6 +17,7 @@
   f.onload = () => {
     const d = f.contentDocument;
     if ("dosya" in q) { if (q.dosya === "open") d.querySelector("[data-act=fileOpen]").click(); return; }
+    if ("guide" in q) { d.querySelector("[data-act=guide]").click(); return; }
     const fo = d.querySelector("[data-act=fileOpen]"); if (fo) fo.click();
     d.querySelector('[data-act=go][data-v=olay]').click();
     if ("scene" in q) {
@@ -51,6 +52,7 @@
       /* yalnızca metin ipuçları (kitaptan toplananlar); sorgu ipuçları burada yok */
       link("saatler", "umutsaat", "leitmotif"); link("tekne", "durdum", "mekan"); link("eller", "marti", "kanit"); link("merkez", "kart", "metafor"); link("anahtar", "otobus", "zaman"); link("yastik", "kart", "diyalog"); link("fis", "dogumgunu", "zaman");
       if (q.pano === "pick") { tap("yastik"); tap("durdum"); }
+      if (q.pano === "pick-help") { tap("yastik"); tap("durdum"); d.querySelector("[data-act=typeHelp]").click(); }
       if (q.pano === "sel") tap("hapsetti");
       if (q.pano === "more") { d.querySelector("[data-act=connMore]").click(); d.querySelector(".conns-head").scrollIntoView(); }
     }

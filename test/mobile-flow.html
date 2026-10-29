@@ -15,6 +15,7 @@ f.onload=()=>{loads++;const w=f.contentWindow,d=w.document;
    measure("dosya");
    d.querySelector("[data-act=fileOpen]").click();measure("dosya-açık");
    d.querySelector("[data-act=audio]").click();out.push("ses="+w.KB.audio.enabled);
+   d.querySelector("[data-act=guide]").click();measure("rehber");out.push("rehberAdım="+d.querySelectorAll(".guide-steps li").length+" tanım="+d.querySelectorAll(".guide .tdefs li").length);d.querySelector("[data-act=guideClose]").click();
    go("olay");measure("olay");
    /* sahne 1'deki nesnelere dokun, büyüteç kullan, kalanını kitaptan topla */
    d.querySelectorAll(".hot").forEach(h=>h.click());
@@ -32,7 +33,7 @@ f.onload=()=>{loads++;const w=f.contentWindow,d=w.document;
    out.push("deniz="+!!d.querySelector(".l-sea-g.on")+" cep="+d.querySelectorAll(".pk").length+" cepOk="+d.querySelectorAll(".pk.ok").length);
    go("pano");measure("pano");
    const tap=id=>{const c=d.querySelector(`.card[data-card="${id}"]`);try{c.dispatchEvent(new w.PointerEvent("pointerdown",{bubbles:true,clientX:10,clientY:10,pointerId:1}));}catch(e){}c.dispatchEvent(new w.PointerEvent("pointerup",{bubbles:true,clientX:10,clientY:10,pointerId:1}));};
-   tap("saatler");tap("umutsaat");d.querySelector("[data-act=ctype][data-t=leitmotif]").click();
+   tap("saatler");tap("umutsaat");d.querySelector("[data-act=typeHelp]").click();out.push("türTanım="+d.querySelectorAll(".picker .tdefs li").length);d.querySelector("[data-act=ctype][data-t=leitmotif]").click();
    tap("kutu");tap("fis");d.querySelector("[data-act=ctype][data-t=zaman]").click();
    tap("eller");tap("marti");d.querySelector("[data-act=ctype][data-t=kanit]").click();
    tap("merkez");tap("kart");d.querySelector("[data-act=ctype][data-t=metafor]").click();

@@ -380,6 +380,23 @@ body.sheet-open{overflow:hidden}
 .sc-fallback{color:var(--sc-dark);--ic-bg:var(--sc-light)}
 .l-use{color:var(--l-dark);--ic-bg:var(--l-sky)}
 
+/* yardım: "?" rehberi ve tür tanımları (yalnızca yardım açıkken) */
+.chip-help b{color:var(--brass);font-family:var(--f-display);font-size:14px}
+.guide-steps{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
+.guide-steps li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;font-family:var(--f-text);font-size:17px;line-height:1.45}
+.guide-steps .ic{color:var(--ink)}
+.guide-steps li:last-child{border-top:1px dashed color-mix(in srgb,var(--ink) 25%,transparent);padding-top:10px}
+.guide-steps li:last-child .ic{color:var(--brass)}
+.tdefs{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.tdefs li{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:10px;align-items:baseline;font-size:14px;line-height:1.4}
+.tdefs .ic{width:18px;height:18px;color:var(--c);align-self:center}
+.tdefs b{font-family:var(--f-ui);font-weight:600;white-space:nowrap}
+.picker .tdefs{border-top:1px dashed var(--line);padding-top:8px;color:var(--fg)}
+.picker .tdefs span{color:var(--muted)}
+.guide .tdefs span{color:var(--ink-soft)}
+.pick-head .link{margin-left:auto}
+.sel-bar i{font-style:italic;font-size:13px}
+
 /* ses düğmesi */
 .chip-btn{cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .chip-btn .ic{width:14px;height:14px;color:var(--muted)}

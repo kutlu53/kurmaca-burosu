@@ -393,6 +393,23 @@ body.sheet-open{overflow:hidden}
 .sc-fallback{color:var(--sc-dark);--ic-bg:var(--sc-light)}
 .l-use{color:var(--l-dark);--ic-bg:var(--l-sky)}
 
+/* yardım: "?" rehberi ve tür tanımları (yalnızca yardım açıkken) */
+.chip-help b{color:var(--brass);font-family:var(--f-display);font-size:14px}
+.guide-steps{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
+.guide-steps li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;font-family:var(--f-text);font-size:17px;line-height:1.45}
+.guide-steps .ic{color:var(--ink)}
+.guide-steps li:last-child{border-top:1px dashed color-mix(in srgb,var(--ink) 25%,transparent);padding-top:10px}
+.guide-steps li:last-child .ic{color:var(--brass)}
+.tdefs{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.tdefs li{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:10px;align-items:baseline;font-size:14px;line-height:1.4}
+.tdefs .ic{width:18px;height:18px;color:var(--c);align-self:center}
+.tdefs b{font-family:var(--f-ui);font-weight:600;white-space:nowrap}
+.picker .tdefs{border-top:1px dashed var(--line);padding-top:8px;color:var(--fg)}
+.picker .tdefs span{color:var(--muted)}
+.guide .tdefs span{color:var(--ink-soft)}
+.pick-head .link{margin-left:auto}
+.sel-bar i{font-style:italic;font-size:13px}
+
 /* ses düğmesi */
 .chip-btn{cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .chip-btn .ic{width:14px;height:14px;color:var(--muted)}
@@ -497,7 +514,7 @@ pre.summary{white-space:pre-wrap;font-size:13px;background:#00000010;padding:12p
   <main id="view"></main>
   <footer>
     <span>Öykü ve vaka bu oyun için özgün yazılmıştır.</span>
-    <span id="resetZone"></span>
+    <span class="row"><span id="helpZone"></span><span id="resetZone"></span></span>
   </footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -2125,6 +2142,30 @@ window.KB = window.KB || {};
   KB.TYPES = { leitmotif: "Leitmotif / İmge", metafor: "Metafor", mekan: "Mekân", diyalog: "Diyalog", zaman: "Zaman", kanit: "Kanıt" };
   KB.GRADES = { ustaca: "Ustaca", guclu: "Güçlü", zayif: "Zayıf", yetersiz: "Kanıt yetersiz" };
   KB.STEPS = [["dosya", "Dosya"], ["olay", "Olay Yeri"], ["sorgu", "Sorgu"], ["konum", "Konum"], ["pano", "Pano"], ["sucla", "Suçlama"]];
+  /* Tek cümlelik tanımlar: yalnızca yardım açıkken, dokununca görünür (rapordaki birim adlarıyla uyumlu) */
+  KB.TYPE_DEFS = {
+    leitmotif: "Öykü boyunca tekrar eden ayrıntı; her dönüşte yeni anlam yüklenir.",
+    metafor: "Bir nesne ya da görüntüyle bir duyguyu, bir durumu anlatma.",
+    mekan: "Yerin ayrıntıları: koku, ses, görüntü. Ad verilmeden kurulan mekân.",
+    diyalog: "Karakterin sözü: ne dediği kadar nasıl dediği ve ne demediği.",
+    zaman: "Ne zaman, ne kadar, hangi sırayla: günler, süreler, gecikmeler.",
+    kanit: "Olayı çözen somut iz: kim, nasıl, nerede."
+  };
+  KB.CENTER_DEF = "Gizli merkez: bütün ayrıntıların akıp birleştiği yer; öykünün aslında anlattığı şey.";
+  KB.GUIDE = [
+    ["tur-kanit", "Sahnede nesnelere dokun; delil tepsiye düşer."],
+    ["tur-diyalog", "Tanıklara soru sor; bazı cevaplar delil verir."],
+    ["tur-mekan", "Adı geçmeyen mekânı delillerle bul."],
+    ["tur-leitmotif", "Panoda iki kartı iple bağla, türünü seç."],
+    ["maske", "Suçluyu, nedeni ve gizli merkezi seç; kısa rapor yaz."],
+    ["merkez", KB.CENTER_DEF]
+  ];
+
+  /* Adres eki: #vaka-02&yardim=kapali */
+  const H = Object.fromEntries(location.hash.slice(1).split("&").filter(Boolean).map((p) => p.includes("=") ? p.split("=") : [p, true]));
+  let helpOn = H.yardim !== "kapali";
+  try { if (H.yardim === "kapali") localStorage.setItem("kurmaca-burosu-yardim", "0"); else if (H.yardim === "acik") localStorage.setItem("kurmaca-burosu-yardim", "1"); const v = localStorage.getItem("kurmaca-burosu-yardim"); if (v !== null) helpOn = v !== "0"; } catch (e) { /* sessiz */ }
+  KB.help = () => helpOn;
 
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -2140,13 +2181,13 @@ window.KB = window.KB || {};
 
   /* ---------- Vaka seçimi: #vaka-02 adres eki > kayıtlı tercih > ilk vaka ---------- */
   const CASES = window.CASES || [];
-  let caseId = (location.hash.match(/^#(vaka-\d+)/) || [])[1];
+  let caseId = Object.keys(H).find((k) => /^vaka-\d+$/.test(k)) || H.vaka;
   if (!caseId) { try { caseId = localStorage.getItem("kurmaca-burosu-vaka"); } catch (e) { /* sessiz */ } }
   const CASE = CASES.find((c) => c.id === caseId) || CASES[0];
   if (!CASE) { $("#view").innerHTML = '<p class="muted">Vaka verisi yüklenemedi (data/case-01.js).</p>'; return; }
   function switchCase(id) {
     try { localStorage.setItem("kurmaca-burosu-vaka", id); } catch (e) { /* sessiz */ }
-    location.hash = "#" + id; location.reload();
+    location.hash = "#" + id + (helpOn ? "" : "&yardim=kapali"); location.reload();
   }
   KB.CASE = CASE;
   const CLUE_IDS = Object.keys(CASE.clues);
@@ -2189,7 +2230,17 @@ window.KB = window.KB || {};
   function renderChips() {
     const g = S.conns.filter((c) => c.grade === "ustaca" || c.grade === "guclu").length;
     const on = KB.audio.enabled || (!KB.audio.enabled && KB.audio.wanted());
-    $("#chips").innerHTML = `<span class="chip">İpucu <b>${foundIds().length}/${CLUE_IDS.length}</b></span><span class="chip">Bağlantı <b>${g}</b></span><span class="chip">Süre <b id="clock">${KB.fmtTime(Date.now() - S.start)}</b></span><button class="chip chip-btn" data-act="audio" aria-pressed="${on}" aria-label="Ses ${on ? "açık" : "kapalı"}" title="Ses">${KB.icon(on ? "saat" : "kepenk")}<b>${on ? "Ses" : "Sessiz"}</b></button>`;
+    $("#chips").innerHTML = `<span class="chip">İpucu <b>${foundIds().length}/${CLUE_IDS.length}</b></span><span class="chip">Bağlantı <b>${g}</b></span><span class="chip">Süre <b id="clock">${KB.fmtTime(Date.now() - S.start)}</b></span><button class="chip chip-btn" data-act="audio" aria-pressed="${on}" aria-label="Ses ${on ? "açık" : "kapalı"}" title="Ses">${KB.icon(on ? "saat" : "kepenk")}<b>${on ? "Ses" : "Sessiz"}</b></button>${helpOn ? `<button class="chip chip-btn chip-help" data-act="guide" aria-label="Nasıl oynanır" title="Nasıl oynanır"><b>?</b></button>` : ""}`;
+    const hz = $("#helpZone"); if (hz) hz.innerHTML = `<button class="btn ghost" data-act="helpToggle" aria-pressed="${helpOn}" title="Öğretmen: yardımı aç/kapat">Yardım ${helpOn ? "açık" : "kapalı"}</button>`;
+  }
+  /* "?" rehberi: altı resimli adım + tür tanımları. Yalnızca yardım açıkken. */
+  function renderGuide() {
+    return `<div class="sheet" id="guideSheet" role="dialog" aria-modal="true" aria-label="Nasıl oynanır">
+      <div class="book paper guide"><div class="book-head"><div><div class="label">Nasıl oynanır</div><h2 class="story-title">Okur dedektif</h2></div><button class="btn" data-act="guideClose" aria-label="Kapat">Kapat</button></div>
+        <ol class="guide-steps">${KB.GUIDE.map(([ic, t]) => `<li>${KB.icon(ic, "lg")}<span>${esc(t)}</span></li>`).join("")}</ol>
+        <div class="label" style="margin-top:14px">Bağ türleri</div>
+        <ul class="tdefs">${Object.entries(TYPES).map(([k, v]) => `<li style="--c:var(--ip-${k})">${KB.icon("tur-" + k)}<b>${v}</b><span>${esc(KB.TYPE_DEFS[k])}</span></li>`).join("")}</ul>
+      </div></div>`;
   }
   KB.audio.onchange = renderChips;
   function renderTabs() {
@@ -2297,9 +2348,10 @@ window.KB = window.KB || {};
         <span class="pin" aria-hidden="true"></span><span class="art">${KB.icon(artOf(id))}</span><span class="cap">${c ? esc(c.short) : "Gizli merkez ?"}</span></div>`;
     };
     const picker = pend
-      ? `<div class="picker"><div class="pick-head">${KB.icon(artOf(pend[0]))}<span class="arrow">↔</span>${KB.icon(artOf(pend[1]))}<span>Bu bağın türü?</span></div>
-         <div class="types">${Object.entries(TYPES).map(([k, v]) => `<button class="tbtn" data-act="ctype" data-t="${k}" style="--c:var(--ip-${k})">${KB.icon("tur-" + k)}<span>${v}</span></button>`).join("")}<button class="btn ghost" data-act="cancel">Vazgeç</button></div></div>`
-      : S.sel ? `<div class="picker sel-bar">${KB.icon(artOf(S.sel))}<span>İkinci karta dokun.</span><button class="btn ghost" data-act="cancel">Bırak</button></div>`
+      ? `<div class="picker"><div class="pick-head">${KB.icon(artOf(pend[0]))}<span class="arrow">↔</span>${KB.icon(artOf(pend[1]))}<span>Bu bağın türü?</span>${helpOn ? `<button class="link" data-act="typeHelp" aria-expanded="${!!S.typeHelp}">Türler?</button>` : ""}</div>
+         <div class="types">${Object.entries(TYPES).map(([k, v]) => `<button class="tbtn" data-act="ctype" data-t="${k}" style="--c:var(--ip-${k})" ${helpOn ? `title="${esc(KB.TYPE_DEFS[k])}"` : ""}>${KB.icon("tur-" + k)}<span>${v}</span></button>`).join("")}<button class="btn ghost" data-act="cancel">Vazgeç</button></div>
+         ${helpOn && S.typeHelp ? `<ul class="tdefs">${Object.entries(TYPES).map(([k, v]) => `<li style="--c:var(--ip-${k})">${KB.icon("tur-" + k)}<b>${v}</b><span>${esc(KB.TYPE_DEFS[k])}</span></li>`).join("")}</ul>` : ""}</div>`
+      : S.sel ? `<div class="picker sel-bar">${KB.icon(artOf(S.sel))}<span>İkinci karta dokun.${helpOn && S.sel === "merkez" ? ` <i class="muted">${esc(KB.CENTER_DEF)}</i>` : ""}</span><button class="btn ghost" data-act="cancel">Bırak</button></div>`
         : `<div class="hint-line muted">Kart → kart: ip. Sürükle: düzenle.</div>`;
     const rows = S.conns.slice().reverse().map((c) => {
       const k = c.a + "|" + c.b, open = openConns.has(k);
@@ -2418,11 +2470,12 @@ window.KB = window.KB || {};
 
   /* ---------- Çizim ---------- */
   const VIEWS = { dosya: vDosya, olay: vOlay, sorgu: vSorgu, konum: vKonum, pano: vPano, sucla: vSucla };
+  let guideOpen = false;
   function render() {
     renderChips(); renderTabs();
     const bookEl = document.querySelector(".book"), bookScroll = bookEl ? bookEl.scrollTop : 0;
-    $("#view").innerHTML = (VIEWS[S.view] || vDosya)();
-    document.body.classList.toggle("sheet-open", S.view === "olay" && S.book);
+    $("#view").innerHTML = (VIEWS[S.view] || vDosya)() + (guideOpen && helpOn ? renderGuide() : "");
+    document.body.classList.toggle("sheet-open", (S.view === "olay" && S.book) || (guideOpen && helpOn));
     const nb = document.querySelector(".book"); if (nb) nb.scrollTop = bookScroll;
     if (S.view === "pano") requestAnimationFrame(drawStrings);
     if (S.view === "sucla" && S.solved) mountFinal(); else KB.audio.stopTicking();
@@ -2577,6 +2630,14 @@ window.KB = window.KB || {};
     audio() { KB.audio.toggle(); renderChips(); if (KB.audio.enabled) { KB.audio.pin(); if (S.view === "sucla" && S.solved) KB.audio.startTicking(); } },
     fileOpen() { S.fileOpen = true; save(); render(); KB.audio.pin(); },
     switchCase(t) { switchCase(t.dataset.id); },
+    guide() { guideOpen = true; render(); const b = document.querySelector("#guideSheet .btn"); if (b) b.focus(); },
+    guideClose() { guideOpen = false; render(); },
+    typeHelp() { S.typeHelp = !S.typeHelp; save(); render(); },
+    helpToggle() {
+      helpOn = !helpOn; guideOpen = false;
+      try { localStorage.setItem("kurmaca-burosu-yardim", helpOn ? "1" : "0"); } catch (e) { /* sessiz */ }
+      render(); toast(helpOn ? "Yardım açık: “?” düğmesi ve tür tanımları görünür." : "Yardım kapalı: yalnızca oyun.");
+    },
     csv() {
       const r = KB.score(S, CASE), csv = KB.summaryCSV(S, r, CASE);
       const a = document.createElement("a");
@@ -2643,6 +2704,7 @@ window.KB = window.KB || {};
     const fn = ACTIONS[t.dataset.act]; if (fn) fn(t);
   });
   document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && guideOpen) { ACTIONS.guideClose(); return; }
     if (e.key === "Escape" && S.book) { ACTIONS.bookClose(); return; }
     if (e.key !== "Enter" && e.key !== " ") return;
     const c = e.target.closest(".c[tabindex]"); if (c) { e.preventDefault(); clueClick(c); }
