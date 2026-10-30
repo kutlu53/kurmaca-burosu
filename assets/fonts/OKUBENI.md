@@ -1,21 +1,17 @@
 # Çevrimdışı yazı tipleri
 
-`index.html` çevrimiçiyken Google Fonts'tan yükler; bağlantı yoksa CSS'teki yedeklere düşer
-(Courier New, Georgia, Arial Narrow). Tam çevrimdışı görünüm için dosyaları buraya indirip
-`css/style.css` başına `@font-face` ekle.
+Oyun yazı tiplerini yalnızca buradan yükler (`css/fonts.css` → `@font-face`); Google Fonts bağlantısı yok.
+Dosyalar yoksa ya da yüklenemezse CSS'teki yedeklere düşer (Courier New, Georgia, Arial Narrow).
+Tek dosya pakette (`node build.js dist`) bu dosyalar base64 olarak gömülür.
 
-İndirilecekler (woff2, latin-ext alt kümesi Türkçe karakterler için şart):
+| Aile | Ağırlık / stil | Dosya | Kullanım |
+|---|---|---|---|
+| Special Elite | 400 | special-elite-400.woff2 | başlık, etiket, damga (`--f-display`) |
+| Spectral | 400, 400 italik, 600 | spectral-400.woff2, spectral-400i.woff2, spectral-600.woff2 | öykü cümleleri, balonlar (`--f-text`) |
+| IBM Plex Sans Condensed | 400, 500, 600 | plex-cond-400.woff2, plex-cond-500.woff2, plex-cond-600.woff2 | arayüz (`--f-ui`) |
 
-| Aile | Ağırlık / stil | Dosya adı |
-|---|---|---|
-| Special Elite | 400 | special-elite-400.woff2 |
-| Spectral | 400, 400 italik, 600 | spectral-400.woff2, spectral-400i.woff2, spectral-600.woff2 |
-| IBM Plex Sans Condensed | 400, 500, 600 | plex-cond-400.woff2, plex-cond-500.woff2, plex-cond-600.woff2 |
+Kaynak: Google Fonts (30 Ekim 2026), latin + latin-ext alt kümesi; ç ğ ı İ ö ş ü â î û ve tipografik tırnaklar denetlendi, eksik yok.
+Lisanslar yan dosyalarda: Special Elite → Apache 2.0, Spectral ve IBM Plex → SIL OFL 1.1.
 
-Örnek:
-
-```css
-@font-face{font-family:"Special Elite";src:url("../assets/fonts/special-elite-400.woff2") format("woff2");font-weight:400;font-display:swap}
-```
-
-Lisans: Special Elite (Apache 2.0), Spectral ve IBM Plex (OFL). Dosyaların yanına lisans metnini koy.
+Yeniden indirmek için: Google Fonts CSS'ini eski bir Firefox kullanıcı aracısıyla (ör. Firefox/40) ve
+`&subset=latin,latin-ext` ekiyle iste; böylece her yüz tek woff2 dosyası olarak gelir (unicode-range parçalanmadan).

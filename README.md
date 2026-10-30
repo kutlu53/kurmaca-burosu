@@ -34,7 +34,7 @@ Oyun kendiliğinden açıklama göstermez; öğretmenin 2-3 dakikalık sözlü g
 
 ## Çevrimdışı kullanım
 
-Sunucu gerekmez. `index.html` dosyasını çift tıklayarak açmak yeterlidir. Tek dosyalık paket: `dist/kurmaca-burosu.html` (öğrencilere bu dosya dağıtılabilir). Yazı tipleri çevrimiçiyken Google Fonts'tan gelir, çevrimdışıyken yedek tiplere düşer; tam çevrimdışı görünüm için `assets/fonts/OKUBENI.md`.
+Sunucu gerekmez. `index.html` dosyasını çift tıklayarak açmak yeterlidir. Tek dosyalık paket: `dist/kurmaca-burosu.html` (öğrencilere bu dosya dağıtılabilir). Yazı tipleri de yerel (`assets/fonts/`, tek dosya pakette gömülü); internet hiç gerekmez. Ayrıntı: `assets/fonts/OKUBENI.md`.
 
 ## Geliştirme
 

@@ -27,14 +27,18 @@ KB.icon = function (id, cls) { return '<svg class="ic ' + (cls || "") + '" aria-
 }
 
 /* Tek dosya: index.html içindeki yerel <link rel=stylesheet> ve <script src> etiketleri içerikleriyle değiştirilir.
-   Google Fonts bağlantısı kalır (çevrimdışıyken yedek yazı tiplerine düşer). */
+   css/fonts.css içindeki ../assets/fonts/*.woff2 başvuruları base64 data: olarak gömülür (dış dosya kalmaz). */
 function buildDist() {
   buildIcons();
   let html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
   const safe = (s) => s.replace(/<\/(script|style)/gi, "<\\/$1");
-  let n = 0;
+  let n = 0, fonts = 0;
   html = html.replace(/<link rel="stylesheet" href="(css\/[^"]+)">/g, (m, href) => {
-    n++; return `<style>\n${safe(fs.readFileSync(path.join(ROOT, href), "utf8"))}\n</style>`;
+    let css = fs.readFileSync(path.join(ROOT, href), "utf8");
+    css = css.replace(/url\("\.\.\/assets\/fonts\/([^"]+\.woff2)"\)/g, (m2, file) => {
+      fonts++; return `url("data:font/woff2;base64,${fs.readFileSync(path.join(ROOT, "assets", "fonts", file)).toString("base64")}")`;
+    });
+    n++; return `<style>\n${safe(css)}\n</style>`;
   });
   html = html.replace(/<script src="((?:data|js)\/[^"]+)"><\/script>/g, (m, src) => {
     n++; return `<script>\n${safe(fs.readFileSync(path.join(ROOT, src), "utf8"))}\n</script>`;
@@ -43,7 +47,7 @@ function buildDist() {
   const dir = path.join(ROOT, "dist"); if (!fs.existsSync(dir)) fs.mkdirSync(dir);
   const out = path.join(dir, "kurmaca-burosu.html");
   fs.writeFileSync(out, html);
-  console.log("dist/kurmaca-burosu.html yazıldı:", n, "dosya gömüldü,", Math.round(html.length / 1024), "KB");
+  console.log("dist/kurmaca-burosu.html yazıldı:", n, "dosya +", fonts, "yazı tipi gömüldü,", Math.round(html.length / 1024), "KB");
 }
 
 const task = process.argv[2];

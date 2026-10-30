@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><title>fonts</title>
+<!-- Yazı tipi denetimi: headless Chrome ile (bayraksız, file://) açılır; sonuç <title> içine yazılır.
+     chrome --headless=new --virtual-time-budget=5000 --dump-dom "file:///C:/Edebiyat-Kurmaca/test/fonts.html" | grep -o "<title>[^<]*" -->
+<link rel="stylesheet" href="../css/fonts.css">
+<style>
+  .t{font-size:40px;white-space:nowrap}
+  .a{font-family:"Spectral",monospace}.b{font-family:monospace}
+  .c{font-family:"Special Elite",monospace}.d{font-family:"IBM Plex Sans Condensed",monospace}
+</style></head><body>
+<div class="t"><span class="a" id="a">Nevzat Usta'nın dükkânında saatler hiç susmazdı — İĞŞÇÖÜ ığşçöü</span></div>
+<div class="t"><span class="b" id="b">Nevzat Usta'nın dükkânında saatler hiç susmazdı — İĞŞÇÖÜ ığşçöü</span></div>
+<div class="t"><span class="c" id="c">Nevzat Usta'nın dükkânında saatler hiç susmazdı — İĞŞÇÖÜ ığşçöü</span></div>
+<div class="t"><span class="d" id="d">Nevzat Usta'nın dükkânında saatler hiç susmazdı — İĞŞÇÖÜ ığşçöü</span></div>
+<script>
+(async () => {
+  const want = ['400 16px "Spectral"', 'italic 400 16px "Spectral"', '600 16px "Spectral"', '400 16px "Special Elite"',
+                '400 16px "IBM Plex Sans Condensed"', '500 16px "IBM Plex Sans Condensed"', '600 16px "IBM Plex Sans Condensed"'];
+  for (const w of want) { try { await document.fonts.load(w, "ığşçöüİĞŞÇÖÜ"); } catch (e) {} }
+  await document.fonts.ready;
+  const st = [...document.fonts].map(f => f.family.replace(/"/g, "") + ":" + f.weight + (f.style === "italic" ? "i" : "") + "=" + f.status);
+  const w = id => document.getElementById(id).getBoundingClientRect().width;
+  // Yüklenen yazı tipi monospace yedeğinden farklı genişlik verir; eşitse yedeğe düşmüştür.
+  const diff = (w("a") !== w("b")) && (w("c") !== w("b")) && (w("d") !== w("b"));
+  const ok = st.length === 7 && st.every(s => s.endsWith("=loaded")) && diff;
+  document.title = (ok ? "FONTS OK " : "FONTS FAIL ") + st.join(" ") + " width:" + [w("a"), w("b"), w("c"), w("d")].map(Math.round).join("/");
+})();
+</script></body></html>
